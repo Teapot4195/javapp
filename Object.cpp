@@ -81,7 +81,7 @@ int Object::hashCode() {
     return hash;
 }
 
-std::shared_ptr<String> Object::to_string() {
+std::shared_ptr<String> Object::toString() {
     return alloc<String>(std::format("{}@{:#x}", typeid(this).name(), reinterpret_cast<std::intptr_t>(this)));
 }
 

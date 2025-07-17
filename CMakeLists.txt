@@ -7,4 +7,6 @@ add_library(base STATIC
         String.cpp
         String.h
         AutoCloseable.h
+        java/util/function/Consumer.cpp
+        java/util/function/Consumer.h
 )

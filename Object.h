@@ -60,18 +60,27 @@ public:
 
     virtual int hashCode();
 
-    virtual std::shared_ptr<String> to_string();
+    virtual std::shared_ptr<String> toString();
 
     virtual bool equals(Object* obj);
 
     /**
-     * @brief THIS IS NOT DESIGNED TO BE OVERRIDEN, DO NOT OVERRIDE
+     * @brief THIS IS NOT DESIGNED TO BE HIDDEN, DO NOT HIDE
      * @param obj the object to compare
      */
     template <class T>
     requires std::derived_from<T, Object>
     bool equals(std::shared_ptr<T> obj) {
         return this->equals(obj.get());
+    }
+
+    /**
+     * @brief THIS IS NOT DESIGNED TO BE HIDDEN, DO NOT HIDE
+     */
+    template <class T>
+    requires std::derived_from<T, Object>
+    bool instanceof() {
+        return dynamic_cast<T>(this) != nullptr;
     }
 
     internals::deferable synchronize();
