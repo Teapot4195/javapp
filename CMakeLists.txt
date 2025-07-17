@@ -9,4 +9,6 @@ add_library(base STATIC
         AutoCloseable.h
         java/util/function/Consumer.cpp
         java/util/function/Consumer.h
+        java/util/Iterator.cpp
+        java/util/Iterator.h
 )
