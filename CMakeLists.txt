@@ -53,4 +53,6 @@ add_library(base STATIC
         java/util/ListIterator.h
         java/util/function/Function.cpp
         java/util/function/Function.h
+        java/util/function/UnaryOperator.cpp
+        java/util/function/UnaryOperator.h
 )
