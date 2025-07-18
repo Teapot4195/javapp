@@ -13,6 +13,7 @@ add_library(base STATIC
         java/util/Iterator.h
         Runnable.cpp
         Runnable.h
+        java/util/stream/BaseStream.h
         java/util/Spliterator.cpp
         java/util/Spliterator.h
 )
