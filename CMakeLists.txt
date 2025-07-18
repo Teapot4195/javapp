@@ -38,4 +38,6 @@ add_library(base STATIC
         java/util/function/Predicate.h
         java/util/Objects.cpp
         java/util/Objects.h
+        java/util/function/IntFunction.cpp
+        java/util/function/IntFunction.h
 )

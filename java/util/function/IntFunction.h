@@ -3,11 +3,11 @@
 #include <Object.h>
 
 namespace java::util::function {
-    class DoubleSupplier : public virtual Object {
-        std::function<double()> inner;
+    class IntFunction : public virtual Object {
+        std::function<shared<Object>(int)> inner;
 
     public:
-        ~DoubleSupplier() override = default;
+        ~IntFunction() override = default;
 
         /**
          * @brief Implicit conversion function
@@ -15,8 +15,8 @@ namespace java::util::function {
          * @param func the inner function
          */
         template <typename F>
-        DoubleSupplier(F&& func) : inner(std::forward<F>(func)) {}
+        IntFunction(F&& func) : inner(std::forward<F>(func)) {}
 
-        virtual double getAsDouble();
+        virtual shared<Object> apply(int value);
     };
 }
