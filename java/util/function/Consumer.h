@@ -11,7 +11,7 @@ namespace java::util::function {
         /**
          * Implicit conversion function
          * @tparam F function type
-         * @param func
+         * @param func the inner function
          */
         template<typename F>
         Consumer(F&& func) : inner(func) {}
