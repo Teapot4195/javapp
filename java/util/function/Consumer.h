@@ -5,6 +5,7 @@
 namespace java::util::function {
     class Consumer : public virtual Object {
         std::function<void(shared<Object>)> inner;
+
     public:
         ~Consumer() override = default;
 
@@ -14,7 +15,7 @@ namespace java::util::function {
          * @param func the inner function
          */
         template<typename F>
-        Consumer(F&& func) : inner(func) {}
+        Consumer(F&& func) : inner(std::forward<F>(func)) {}
 
         virtual void accept(shared<Object> T);
 

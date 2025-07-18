@@ -18,4 +18,6 @@ add_library(base STATIC
         java/util/Spliterator.h
         java/util/function/IntPredicate.cpp
         java/util/function/IntPredicate.h
+        java/util/function/Supplier.cpp
+        java/util/function/Supplier.h
 )
