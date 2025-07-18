@@ -80,7 +80,7 @@ public:
     template <class T>
     requires std::derived_from<T, Object>
     bool instanceof() {
-        return dynamic_cast<T>(this) != nullptr;
+        return dynamic_cast<T*>(this) != nullptr;
     }
 
     internals::deferable synchronize();

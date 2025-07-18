@@ -7,7 +7,7 @@ namespace java::util::function {
         std::function<shared<Object>(shared<Object>)> inner;
 
     public:
-        ~Function()() override = default;
+        ~Function() override = default;
 
         /**
          * Implicit conversion function

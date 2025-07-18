@@ -57,4 +57,6 @@ add_library(base STATIC
         java/util/List.cpp
         java/util/List.h
         java/util/RandomAccess.h
+        java/util/function/BiConsumer.cpp
+        java/util/function/BiConsumer.h
 )

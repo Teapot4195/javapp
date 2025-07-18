@@ -12,7 +12,7 @@ public:
         delete[] data;
     }
 
-    explicit Array(shared<Array> last) : length(last) {
+    explicit Array(shared<Array> last) : length(last->length) {
         data = new T[length];
         for (int i = 0; i < length; i++) {
             data[i] = last->data[i];

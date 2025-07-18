@@ -150,9 +150,7 @@ namespace java::util {
 
         shared<List> subList(int fromIndex, int toIndex) override;
 
-        shared<Array<>> toArray() override {
-            return alloc<Array<>>(parent);
-        }
+        shared<Array<>> toArray() override;
 
         shared<Array<>> toArray(shared<Array<>> a) override;
     };
@@ -350,8 +348,13 @@ namespace java::util {
         return end - begin;
     }
 
-    shared<List> List_CopyOf_Immutable_SubList::subList(int fromIndex, int toIndex) {
-        return alloc<List_CopyOf_Immutable_SubList>(this, fromIndex, toIndex);
+    shared<List> List_CopyOf_Immutable_SubList::subList(const int fromIndex, const int toIndex) {
+        return alloc<List_CopyOf_Immutable_SubList>(
+            parent, begin + fromIndex, end - toIndex);
+    }
+
+    shared<Array<>> List_CopyOf_Immutable_SubList::toArray() {
+        return alloc<Array<>>(parent->parent);
     }
 
     shared<Array<>> List_CopyOf_Immutable_SubList::toArray(shared<Array<>> a) {
@@ -377,7 +380,7 @@ namespace java::util {
     }
 
     shared<List> List::of(const std::vector<shared<Object>>& elements) {
-        return alloc<List_CopyOf_Immutable>(elements);
+        return alloc<List_CopyOf_Immutable>(alloc<Array<>>(elements));
     }
 
     void List::replaceAll(const shared<function::UnaryOperator> op) {
