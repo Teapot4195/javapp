@@ -3,6 +3,7 @@
 #include <format>
 #include <iostream>
 #include <typeindex>
+#include <stacktrace>
 
 #include "String.h"
 

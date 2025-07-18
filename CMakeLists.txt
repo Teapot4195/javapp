@@ -34,10 +34,18 @@ add_library(base STATIC
         Iterable.h
         Long.cpp
         Long.h
+        java/util/Collection.cpp
+        java/util/Collection.h
+        java/util/stream/Stream.cpp
+        java/util/stream/Stream.h
         java/util/function/Predicate.cpp
         java/util/function/Predicate.h
         java/util/Objects.cpp
         java/util/Objects.h
+        Array.cpp
+        Array.h
         java/util/function/IntFunction.cpp
         java/util/function/IntFunction.h
+        java/util/Spliterators.cpp
+        java/util/Spliterators.h
 )

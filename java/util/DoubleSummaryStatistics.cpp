@@ -2,6 +2,7 @@
 
 #include <Double.h>
 #include <format>
+#include <String.h>
 
 namespace java::util {
     DoubleSummaryStatistics::DoubleSummaryStatistics()

@@ -15,7 +15,9 @@ namespace java::util::function {
 
     shared<Predicate> Predicate::isEqual(const shared<Object> &targetRef) {
         return alloc<Predicate>([&](const shared<Object>& object) -> bool {
-            return (targetRef == nullptr) ? Objects::isNull : targetRef->equals(object);
+            if (targetRef == nullptr)
+                return Objects::isNull(object);
+            return targetRef->equals(object);
         });
     }
 

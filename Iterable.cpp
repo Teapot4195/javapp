@@ -14,10 +14,8 @@ void Iterable::forEach(shared<java::util::function::Consumer> action) {
 class Iterable_Spliterator_Default : public virtual java::util::Spliterator {
     shared<java::util::Iterator> inner;
 
-    explicit Iterable_Spliterator_Default(Iterable *iterable) : inner(iterable->iterator()) {}
-
-    friend shared<Spliterator> Iterable::spliterator();
 public:
+    explicit Iterable_Spliterator_Default(Iterable *iterable) : inner(iterable->iterator()) {}
     ~Iterable_Spliterator_Default() override = default;
 
     int characteristics() override {
