@@ -1,6 +1,6 @@
 add_library(base STATIC
-    Object.cpp
-    Object.h
+        Object.cpp
+        Object.h
         jlang.h
         Throwable.cpp
         Throwable.h
@@ -13,4 +13,6 @@ add_library(base STATIC
         java/util/Iterator.h
         Runnable.cpp
         Runnable.h
+        java/util/Spliterator.cpp
+        java/util/Spliterator.h
 )
