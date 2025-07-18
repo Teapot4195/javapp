@@ -34,4 +34,8 @@ add_library(base STATIC
         Iterable.h
         Long.cpp
         Long.h
+        java/util/function/Predicate.cpp
+        java/util/function/Predicate.h
+        java/util/Objects.cpp
+        java/util/Objects.h
 )

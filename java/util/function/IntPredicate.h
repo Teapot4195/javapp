@@ -25,5 +25,4 @@ namespace java::util::function {
 
         virtual bool test(int value);
     };
-
 }
