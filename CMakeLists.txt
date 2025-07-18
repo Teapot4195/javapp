@@ -30,4 +30,8 @@ add_library(base STATIC
         java/util/DoubleSummaryStatistics.h
         Double.cpp
         Double.h
+        Iterable.cpp
+        Iterable.h
+        Long.cpp
+        Long.h
 )
