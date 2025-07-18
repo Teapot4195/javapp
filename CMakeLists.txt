@@ -22,4 +22,6 @@ add_library(base STATIC
         java/util/function/Supplier.h
         java/util/function/DoubleConsumer.cpp
         java/util/function/DoubleConsumer.h
+        java/util/function/DoubleSupplier.cpp
+        java/util/function/DoubleSupplier.h
 )
