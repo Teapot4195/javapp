@@ -44,7 +44,6 @@ add_library(base STATIC
         java/util/function/Predicate.h
         java/util/Objects.cpp
         java/util/Objects.h
-        Array.cpp
         Array.h
         java/util/function/IntFunction.cpp
         java/util/function/IntFunction.h
@@ -55,4 +54,7 @@ add_library(base STATIC
         java/util/function/Function.h
         java/util/function/UnaryOperator.cpp
         java/util/function/UnaryOperator.h
+        java/util/List.cpp
+        java/util/List.h
+        java/util/RandomAccess.h
 )

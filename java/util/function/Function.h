@@ -14,6 +14,7 @@ namespace java::util::function {
          * @tparam F function type
          * @param func the inner function
          */
+        template <typename F>
         Function(F&& func) : inner(func) {}
 
         virtual shared<Function> andThen(shared<Function> after);
