@@ -26,4 +26,8 @@ add_library(base STATIC
         java/util/function/DoubleSupplier.h
         java/util/function/DoublePredicate.cpp
         java/util/function/DoublePredicate.h
+        java/util/DoubleSummaryStatistics.cpp
+        java/util/DoubleSummaryStatistics.h
+        Double.cpp
+        Double.h
 )

@@ -17,6 +17,11 @@ namespace java::util::function {
         template <typename F>
         DoubleConsumer(F&& func) : inner(std::forward<F>(func)) {}
 
+        /**
+         * @brief Default constructor, allows the inner function to be ignored if this it's overriden?
+         */
+        DoubleConsumer() = default;
+
         virtual void accept(double value);
 
         virtual shared<DoubleConsumer> andThen(shared<DoubleConsumer> after);

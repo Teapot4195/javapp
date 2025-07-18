@@ -10,7 +10,7 @@ namespace java::util::function {
         ~Consumer() override = default;
 
         /**
-         * Implicit conversion function
+         * @brief Implicit conversion function
          * @tparam F function type
          * @param func the inner function
          */
