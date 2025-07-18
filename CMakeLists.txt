@@ -16,4 +16,6 @@ add_library(base STATIC
         java/util/stream/BaseStream.h
         java/util/Spliterator.cpp
         java/util/Spliterator.h
+        java/util/function/IntPredicate.cpp
+        java/util/function/IntPredicate.h
 )
