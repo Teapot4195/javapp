@@ -48,4 +48,5 @@ add_library(base STATIC
         java/util/function/IntFunction.h
         java/util/Spliterators.cpp
         java/util/Spliterators.h
+        java/util/ListIterator.h
 )
