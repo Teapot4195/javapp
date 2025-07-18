@@ -20,4 +20,6 @@ add_library(base STATIC
         java/util/function/IntPredicate.h
         java/util/function/Supplier.cpp
         java/util/function/Supplier.h
+        java/util/function/DoubleConsumer.cpp
+        java/util/function/DoubleConsumer.h
 )

@@ -14,7 +14,7 @@ namespace java::util::function {
          * @tparam F function type
          * @param func the inner function
          */
-        template<typename F>
+        template <typename F>
         Consumer(F&& func) : inner(std::forward<F>(func)) {}
 
         virtual void accept(shared<Object> T);
