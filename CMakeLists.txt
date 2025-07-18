@@ -14,6 +14,8 @@ add_library(base STATIC
         Runnable.cpp
         Runnable.h
         java/util/stream/BaseStream.h
+        java/util/Comparator.cpp
+        java/util/Comparator.h
         java/util/Spliterator.cpp
         java/util/Spliterator.h
         java/util/function/IntPredicate.cpp
