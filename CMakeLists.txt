@@ -61,6 +61,8 @@ add_library(base STATIC
         java/util/function/BiConsumer.h
         java/util/Set.cpp
         java/util/Set.h
+        java/util/function/BinaryOperator.cpp
+        java/util/function/BinaryOperator.h
         java/util/function/BiFunction.cpp
         java/util/function/BiFunction.h
 )
