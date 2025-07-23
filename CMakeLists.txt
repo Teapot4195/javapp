@@ -82,4 +82,6 @@ add_library(base STATIC
         Comparable.h
         java/util/stream/Collector.cpp
         java/util/stream/Collector.h
+        java/util/stream/DoubleStream.cpp
+        java/util/stream/DoubleStream.h
 )
