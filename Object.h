@@ -81,6 +81,10 @@ namespace internals {
             return *this;
         }
     };
+
+    struct typeData {
+        std::size_t size;
+    };
 }
 
 struct lateinit_stack {
@@ -128,14 +132,14 @@ public:
     }
 };
 
+template <typename T>
+using shared = std::shared_ptr<T>;
+
 extern lateinit_stack _G_stack;
 
-class Object : public std::enable_shared_from_this<Object> {
-    struct typeData {
-        std::size_t size;
-    };
-    static std::unordered_map<std::type_index, typeData> typeMap;
+extern std::unordered_map<std::type_index, internals::typeData> typeMap;
 
+class Object : public std::enable_shared_from_this<Object> {
     std::recursive_mutex _monitor_mutex;
     std::condition_variable_any _monitor_cond;
 
@@ -168,7 +172,7 @@ public:
 
     virtual int hashCode();
 
-    virtual std::shared_ptr<String> toString();
+    virtual shared<String> toString();
 
     virtual bool equals(Object* obj);
 
@@ -178,7 +182,7 @@ public:
      */
     template <class T>
     requires std::derived_from<T, Object>
-    bool equals(std::shared_ptr<T> obj) {
+    bool equals(shared<T> obj) {
         return this->equals(obj.get());
     }
 
@@ -194,11 +198,8 @@ public:
     internals::deferable synchronize();
 };
 
-template <typename T>
-using shared = std::shared_ptr<T>;
-
 template <typename T, typename... Args>
-std::shared_ptr<T> alloc(Args&&... args) {
+shared<T> alloc(Args&&... args) {
     auto shared = std::make_shared<T>(std::forward<Args>(args)...);
     if constexpr (std::derived_from<T, Object>) {
         shared->lateinit();
@@ -209,7 +210,7 @@ std::shared_ptr<T> alloc(Args&&... args) {
 #define DEFINE_SHARED_EQUALS \
 template <class T> \
 requires std::derived_from<T, Object> \
-bool equals(std::shared_ptr<T> obj) { \
+bool equals(shared<T> obj) { \
     return this->equals(obj.get()); \
 }
 

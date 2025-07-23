@@ -1,7 +1,7 @@
 #include "Consumer.h"
 
 namespace java::util::function {
-    void Consumer::accept(std::shared_ptr<Object> T) {
+    void Consumer::accept(shared<Object> T) {
         inner(std::move(T));
     }
 

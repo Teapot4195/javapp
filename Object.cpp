@@ -7,7 +7,7 @@
 
 #include "String.h"
 
-std::unordered_map<std::type_index, Object::typeData> Object::typeMap;
+std::unordered_map<std::type_index, internals::typeData> typeMap;
 
 lateinit_stack _G_stack;
 
@@ -111,7 +111,7 @@ int Object::hashCode() {
     return hash;
 }
 
-std::shared_ptr<String> Object::toString() {
+shared<String> Object::toString() {
     return alloc<String>(std::format("{}@{:#x}", typeid(*this).name(), reinterpret_cast<std::intptr_t>(this)));
 }
 

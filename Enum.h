@@ -39,7 +39,7 @@ public:
 
     int ordinal();
 
-    std::shared_ptr<String> toString() override;
+    shared<String> toString() override;
 
     static shared<Object> valueOf(std::type_index enumClass, shared<String> name);
 
