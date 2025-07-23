@@ -19,4 +19,10 @@ public:
      * @param str the string literal to convert from
      */
     explicit String(const char* str);
+
+    bool equals(Object *obj) override;
+
+    DEFINE_SHARED_EQUALS
+
+    std::string& get_backing();
 };

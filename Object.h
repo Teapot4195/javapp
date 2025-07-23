@@ -21,8 +21,114 @@ namespace internals {
         ~deferable() {
             func();
         }
+
+        deferable(const deferable &other) = delete;
+
+        deferable(deferable &&other) noexcept
+            : func(std::move(other.func)) {
+        }
+
+        deferable & operator=(const deferable &other) = delete;
+
+        deferable & operator=(deferable &&other) noexcept {
+            if (this == &other)
+                return *this;
+            func = std::move(other.func);
+            return *this;
+        }
+    };
+
+    struct lateinit_frame {
+        virtual ~lateinit_frame() = default;
+    };
+
+    struct lateinit_ll {
+        lateinit_ll* last{nullptr};
+        lateinit_frame* frame{nullptr};
+        lateinit_ll* next{nullptr};
+    };
+
+    template <typename T>
+    struct scoped_deferable {
+        T* data;
+
+        explicit scoped_deferable(T* data) : data(data) {}
+
+        ~scoped_deferable() {
+            delete data;
+        }
+
+        T* operator->() {
+            return data;
+        }
+
+        T& operator*() {
+            return *data;
+        }
+
+        scoped_deferable(const scoped_deferable &other) = delete;
+
+        scoped_deferable(scoped_deferable &&other) noexcept
+            : data(other.data) {
+        }
+
+        scoped_deferable & operator=(const scoped_deferable &other) = delete;
+
+        scoped_deferable & operator=(scoped_deferable &&other) noexcept {
+            if (this == &other)
+                return *this;
+            data = other.data;
+            return *this;
+        }
     };
 }
+
+struct lateinit_stack {
+    internals::lateinit_ll* this_frame{nullptr};
+
+    ~lateinit_stack();
+
+    template <typename T, typename... Args>
+    T* put(Args&&... args) {
+        if (this_frame == nullptr) {
+            this_frame = new internals::lateinit_ll;
+        } else if (this_frame->next != nullptr) {
+            // the next frame was allocated the last time around
+            // advance the list and call it good
+            this_frame = this_frame->next;
+        } else {
+            // we don't have any more stack frames left available
+            this_frame->next = new internals::lateinit_ll;
+            this_frame->next->last = this_frame;
+            this_frame = this_frame->next;
+        }
+        T *allocd = new T(std::forward<Args>(args)...);
+        this_frame->frame = allocd;
+
+        return allocd;
+    }
+
+private:
+    void die(std::string type);
+
+public:
+    template <typename T>
+    internals::scoped_deferable<T> pop() {
+        this_frame = this_frame->last;
+
+        auto* ptr = dynamic_cast<T*>(this_frame->next->frame);
+        if (ptr == nullptr) {
+            die(typeid(T).name());
+        }
+        auto res = internals::scoped_deferable<T>{ptr}; // this is owning, we can set the frame to nullptr safely now
+
+        this_frame->next->frame = nullptr;
+
+        return std::move(res);
+    }
+};
+
+extern lateinit_stack _G_stack;
 
 class Object : public std::enable_shared_from_this<Object> {
     struct typeData {
@@ -47,6 +153,8 @@ public:
             sizeof(T),
         };
     }
+
+    virtual void lateinit();
 
     void notify();
 
@@ -91,5 +199,16 @@ using shared = std::shared_ptr<T>;
 
 template <typename T, typename... Args>
  std::shared_ptr<T> alloc(Args&&... args) {
-    return std::make_shared<T>(std::forward<Args>(args)...);
+    auto shared = std::make_shared<T>(std::forward<Args>(args)...);
+    if constexpr (std::derived_from<T, Object>) {
+        shared->lateinit();
+    }
+    return shared;
+}
+
+#define DEFINE_SHARED_EQUALS \
+template <class T> \
+requires std::derived_from<T, Object> \
+bool equals(std::shared_ptr<T> obj) { \
+    return this->equals(obj.get()); \
 }

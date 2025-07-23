@@ -65,6 +65,9 @@ add_library(base STATIC
         java/util/function/BinaryOperator.h
         java/util/function/BiFunction.cpp
         java/util/function/BiFunction.h
+        Enum.cpp
+        Enum.h
         java/io/Serializable.cpp
         java/io/Serializable.h
+        Comparable.h
 )

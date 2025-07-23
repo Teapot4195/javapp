@@ -9,9 +9,38 @@
 
 std::unordered_map<std::type_index, Object::typeData> Object::typeMap;
 
+lateinit_stack _G_stack;
+
+lateinit_stack::~lateinit_stack() {
+    // by the time this is deconstructed, we should (probably?) have fully emptied the lateinit stack
+    // we use this to check if there are any more frames left in the stack, if there is, we should warn the user
+
+    if (this_frame != nullptr && (this_frame->last != nullptr || this_frame->frame != nullptr)) {
+        std::cerr << "[WARN] by the time lateinit stack was deconstructed, there were still frames on the stack!!!" << std::endl;
+        std::cerr << "[NOTE] this usually means the program has had a severe issue in code." << std::endl;
+        std::cerr << "[NOTE] lateinit stack will now unwind for you." << std::endl;
+        // the stack is not empty
+        int id = 0;
+        auto* cur = this_frame;
+        while (cur != nullptr) {
+            if (cur->frame != nullptr) {
+                std::cerr << std::format("[WARN] {}: {}\n", id++, typeid(*cur->frame).name());
+            }
+            cur = cur->last;
+        }
+    }
+}
+
+void lateinit_stack::die(std::string type) {
+    std::cerr << std::format("[FATAL] [lateinit_stack::die] expecting frame to be downcastable to {}, it was {}", type, typeid(*this_frame->next->frame).name()) << std::endl;
+    std::terminate();
+}
+
 std::shared_ptr<Object> Object::clone() {
     throw std::runtime_error("clone not implemented");
 }
+
+void Object::lateinit() {}
 
 void Object::notify() {
     _monitor_cond.notify_one();
@@ -67,9 +96,9 @@ void Object::wait(const long long timeoutMillis, const int nanos) {
 }
 
 int Object::hashCode() {
-    const auto ind = std::type_index(typeid(this));
+    const auto ind = std::type_index(typeid(*this));
 
-    std::cerr << "[WARN] using default hash type for type: " << typeid(this).name() << " consider specializing for your type!" << std::endl;
+    std::cerr << "[WARN] using default hash type for type: " << typeid(*this).name() << " consider specializing for your type!" << std::endl;
     std::cerr << "[NOTE] the default hash does not take into account padding bytes, this hash may behave incorrectly!" << std::endl;
 
     const auto buf = reinterpret_cast<char*>(this);
@@ -83,7 +112,7 @@ int Object::hashCode() {
 }
 
 std::shared_ptr<String> Object::toString() {
-    return alloc<String>(std::format("{}@{:#x}", typeid(this).name(), reinterpret_cast<std::intptr_t>(this)));
+    return alloc<String>(std::format("{}@{:#x}", typeid(*this).name(), reinterpret_cast<std::intptr_t>(this)));
 }
 
 bool Object::equals(Object *obj) {
