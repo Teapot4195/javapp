@@ -144,7 +144,7 @@ class Object : public std::enable_shared_from_this<Object> {
     std::condition_variable_any _monitor_cond;
 
 public:
-        virtual ~Object() = default;
+    virtual ~Object() = default;
 
 protected:
     virtual std::shared_ptr<Object> clone();
