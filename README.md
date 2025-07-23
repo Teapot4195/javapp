@@ -1,6 +1,7 @@
-# BASE
+# Java++
 
-Welcome to libbase, `java.base` but in c++!
+Welcome to libbase, `java.base` but in c++! (you should not question how this came
+to be)
 
 As complete as possible java 19 Lang API, provided in C++. 
 
