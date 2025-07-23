@@ -6,7 +6,7 @@
 
 namespace java::util::function {
     shared<Predicate> Predicate::And(const shared<Predicate> other) {
-        return alloc<Predicate>([&](const shared<Object>& value) -> bool {
+        return alloc<Predicate>([=](const shared<Object>& value) -> bool {
             if (!test(value))
                 return false;
             return other->test(value);
@@ -14,7 +14,7 @@ namespace java::util::function {
     }
 
     shared<Predicate> Predicate::isEqual(const shared<Object> &targetRef) {
-        return alloc<Predicate>([&](const shared<Object>& object) -> bool {
+        return alloc<Predicate>([=](const shared<Object>& object) -> bool {
             if (targetRef == nullptr)
                 return Objects::isNull(object);
             return targetRef->equals(object);
@@ -26,13 +26,13 @@ namespace java::util::function {
     }
 
     shared<Predicate> Predicate::negate() {
-        return alloc<Predicate>([&](const shared<Object>& value) -> bool {
+        return alloc<Predicate>([=](const shared<Object>& value) -> bool {
             return !test(value);
         });
     }
 
     shared<Predicate> Predicate::Or(const shared<Predicate> other) {
-        return alloc<Predicate>([&](const shared<Object>& value) -> bool {
+        return alloc<Predicate>([=](const shared<Object>& value) -> bool {
             if (test(value))
                 return true;
             return other->test(value);

@@ -10,7 +10,7 @@ namespace java::util::function {
     shared<IntConsumer> IntConsumer::andThen(const shared<IntConsumer> after) {
         if (after == nullptr)
             throw std::runtime_error("THROW NULLPOINTEREXCEPTION");
-        return alloc<IntConsumer>([&](const int value) {
+        return alloc<IntConsumer>([=](const int value) {
             accept(value);
             after->accept(value);
         });

@@ -6,7 +6,7 @@ namespace java::util::function {
     }
 
     shared<DoubleConsumer> DoubleConsumer::andThen(const shared<DoubleConsumer> after) {
-        return alloc<DoubleConsumer>([&](const double value) {
+        return alloc<DoubleConsumer>([=](const double value) {
             accept(value);
             after->accept(value);
         });

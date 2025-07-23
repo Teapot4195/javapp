@@ -6,7 +6,7 @@ namespace java::util::function {
     }
 
     shared<LongConsumer> LongConsumer::andThen(const shared<LongConsumer> after) {
-        return alloc<LongConsumer>([&](const long long value) {
+        return alloc<LongConsumer>([=](const long long value) {
             accept(value);
             after->accept(value);
         });

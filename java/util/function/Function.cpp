@@ -2,7 +2,7 @@
 
 namespace java::util::function {
     shared<Function> Function::andThen(const shared<Function> after) {
-        return alloc<Function>([&](const shared<Object> &t) {
+        return alloc<Function>([=](const shared<Object> &t) {
             return after->apply(apply(t));
         });
     }
@@ -12,7 +12,7 @@ namespace java::util::function {
     }
 
     shared<Function> Function::compose(const shared<Function> before) {
-        return alloc<Function>([&](const shared<Object> &t) {
+        return alloc<Function>([=](const shared<Object> &t) {
             return apply(before->apply(t));
         });
     }

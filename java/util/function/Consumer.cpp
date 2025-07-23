@@ -6,7 +6,7 @@ namespace java::util::function {
     }
 
     shared<Consumer> Consumer::andThen(shared<Consumer> after) {
-        return alloc<Consumer>([&](shared<Object> obj) {
+        return alloc<Consumer>([=](shared<Object> obj) {
             this->accept(obj);
             after->accept(obj);
         });
