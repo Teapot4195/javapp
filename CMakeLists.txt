@@ -92,5 +92,9 @@ add_library(javapp STATIC
         java/util/stream/IntStream.h
         java/util/stream/LongStream.cpp
         java/util/stream/LongStream.h
+        java/util/function/IntConsumer.cpp
+        java/util/function/IntConsumer.h
+        java/util/function/LongConsumer.cpp
+        java/util/function/LongConsumer.h
 )
 target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR})

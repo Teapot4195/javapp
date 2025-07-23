@@ -26,5 +26,4 @@ namespace java::util::function {
 
         virtual shared<DoubleConsumer> andThen(shared<DoubleConsumer> after);
     };
-
 }
