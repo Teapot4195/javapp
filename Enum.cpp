@@ -52,6 +52,10 @@ Enum::Enum(const shared<String>& name, int ordinal) {
     _G_stack.put<enum_lateinit>(name, ordinal);
 }
 
+Enum::Enum(const std::string &name) {
+    _G_stack.put<enum_lateinit>(alloc<String>(name), std::numeric_limits<int>::min());
+}
+
 bool check_get(const enum_descriptor& table, const shared<String> &target) {
     for (const enum_info& entry : table.informations) {
         if (entry.name->equals(target.get())) {

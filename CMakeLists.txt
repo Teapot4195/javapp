@@ -78,4 +78,6 @@ add_library(base STATIC
         java/io/Serializable.cpp
         java/io/Serializable.h
         Comparable.h
+        java/util/stream/Collector.cpp
+        java/util/stream/Collector.h
 )

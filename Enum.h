@@ -18,6 +18,13 @@ public:
 
     Enum(const shared<String>& name, int ordinal);
 
+    /**
+     * @brief One of the default enum constructors for subclasses, this one automatically creates zero indexed
+     * enums based on type.
+     * @param name the declaration name for this enum, used for some uses.
+     */
+    explicit Enum(const std::string& name);
+
     void lateinit() override;
 
     int compareTo(shared<Object> o) override;

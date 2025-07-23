@@ -198,7 +198,7 @@ template <typename T>
 using shared = std::shared_ptr<T>;
 
 template <typename T, typename... Args>
- std::shared_ptr<T> alloc(Args&&... args) {
+std::shared_ptr<T> alloc(Args&&... args) {
     auto shared = std::make_shared<T>(std::forward<Args>(args)...);
     if constexpr (std::derived_from<T, Object>) {
         shared->lateinit();
@@ -211,4 +211,14 @@ template <class T> \
 requires std::derived_from<T, Object> \
 bool equals(std::shared_ptr<T> obj) { \
     return this->equals(obj.get()); \
+}
+
+template <typename T>
+std::vector<shared<Object>> decay_vec(const std::vector<shared<T>>& source) {
+    std::vector<shared<Object>> result;
+
+    for (const auto& element : source)
+        result.push_back(element);
+
+    return result;
 }
