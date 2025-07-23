@@ -88,5 +88,9 @@ add_library(javapp STATIC
         java/util/stream/DoubleStream.h
         java/util/Optional.cpp
         java/util/Optional.h
+        java/util/stream/IntStream.cpp
+        java/util/stream/IntStream.h
+        java/util/stream/LongStream.cpp
+        java/util/stream/LongStream.h
 )
 target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR})
