@@ -1,3 +1,11 @@
+cmake_minimum_required(VERSION 3.31)
+project(javapp)
+
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+    doxygen_add_docs(docs src/base ALL)
+endif()
+
 add_library(base STATIC
         Object.cpp
         Object.h
