@@ -96,5 +96,11 @@ add_library(javapp STATIC
         java/util/function/IntConsumer.h
         java/util/function/LongConsumer.cpp
         java/util/function/LongConsumer.h
+        java/util/function/ToDoubleFunction.cpp
+        java/util/function/ToDoubleFunction.h
+        java/util/function/ToIntFunction.cpp
+        java/util/function/ToIntFunction.h
+        java/util/function/ToLongFunction.cpp
+        java/util/function/ToLongFunction.h
 )
 target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR})
