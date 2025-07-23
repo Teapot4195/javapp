@@ -5,10 +5,10 @@ set(CMAKE_CXX_STANDARD 26)
 
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
-    doxygen_add_docs(docs src/base ALL)
+    doxygen_add_docs(docs ${CMAKE_SOURCE_DIR} ALL)
 endif()
 
-add_library(base STATIC
+add_library(javapp STATIC
         Object.cpp
         Object.h
         jlang.h
@@ -82,6 +82,9 @@ add_library(base STATIC
         Comparable.h
         java/util/stream/Collector.cpp
         java/util/stream/Collector.h
+        java/util/OptionalDouble.cpp
+        java/util/OptionalDouble.h
         java/util/stream/DoubleStream.cpp
         java/util/stream/DoubleStream.h
 )
+target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR})
