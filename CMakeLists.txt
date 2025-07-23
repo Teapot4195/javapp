@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.31)
 project(javapp)
 
+set(CMAKE_CXX_STANDARD 26)
+
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
     doxygen_add_docs(docs src/base ALL)
