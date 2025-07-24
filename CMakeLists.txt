@@ -106,5 +106,7 @@ add_library(javapp STATIC
         java/util/function/ObjDoubleConsumer.h
         java/util/function/DoubleFunction.cpp
         java/util/function/DoubleFunction.h
+        java/util/function/BiPredicate.cpp
+        java/util/function/BiPredicate.h
 )
 target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR})
