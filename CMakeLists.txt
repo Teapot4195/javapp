@@ -112,5 +112,7 @@ add_library(javapp STATIC
         java/util/function/BooleanSupplier.h
         java/util/function/DoubleBinaryOperator.cpp
         java/util/function/DoubleBinaryOperator.h
+        java/util/function/DoubleToIntFunction.cpp
+        java/util/function/DoubleToIntFunction.h
 )
 target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR})
