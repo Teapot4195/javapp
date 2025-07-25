@@ -116,5 +116,7 @@ add_library(javapp STATIC
         java/util/function/DoubleToIntFunction.h
         java/util/function/DoubleToLongFunction.cpp
         java/util/function/DoubleToLongFunction.h
+        java/util/function/DoubleUnaryOperator.cpp
+        java/util/function/DoubleUnaryOperator.h
 )
 target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR})
