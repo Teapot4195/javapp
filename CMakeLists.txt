@@ -108,5 +108,7 @@ add_library(javapp STATIC
         java/util/function/DoubleFunction.h
         java/util/function/BiPredicate.cpp
         java/util/function/BiPredicate.h
+        java/util/function/BooleanSupplier.cpp
+        java/util/function/BooleanSupplier.h
 )
 target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR})
