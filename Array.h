@@ -28,6 +28,8 @@ public:
         }
     }
 
+    explicit Array(const int size) : length(size), data(new T[size]) {}
+
     void resize(int size) {
         auto* newdata = new T[size];
 
