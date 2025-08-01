@@ -5,6 +5,9 @@
 
 namespace java::util {
     class AbstractCollection : public virtual Object, public virtual Collection {
+    protected:
+        AbstractCollection() = default;
+
     public:
         ~AbstractCollection() override = default;
 
@@ -31,6 +34,8 @@ namespace java::util {
         shared<Array<>> toArray() override;
 
         shared<Array<>> toArray(shared<Array<>> a) override;
+
+        using Collection::toArray;
 
         shared<String> toString() override;
     };

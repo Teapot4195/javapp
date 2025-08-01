@@ -3,6 +3,8 @@
 #include "Iterator.h"
 #include "String.h"
 
+#include "function/IntFunction.h"
+
 namespace java::util {
     bool AbstractCollection::add(shared<Object> e) {
         throw std::runtime_error("THROW UNSUPPORTEDOPERATIONEXCEPTION");
