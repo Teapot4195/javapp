@@ -181,6 +181,8 @@ namespace java::util {
     };
 
     shared<ListIterator> AbstractList::listIterator(int index) {
+        if (index < 0 || index >= size())
+            throw std::runtime_error("THROW CONCURRENTMODIFICATIONEXCEPTION");
         return alloc<AbstractList_ListIterator_Specialization>(std::dynamic_pointer_cast<AbstractList>(shared_from_this()), index);
     }
 
