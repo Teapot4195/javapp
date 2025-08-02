@@ -122,6 +122,8 @@ add_library(javapp STATIC
         java/util/AbstractCollection.h
         java/util/AbstractList.cpp
         java/util/AbstractList.h
+        java/util/ArrayList.cpp
+        java/util/ArrayList.h
         Cloneable.h
 )
 target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR})
