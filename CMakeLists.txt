@@ -127,5 +127,6 @@ add_library(javapp STATIC
         Cloneable.h
         java/util/AbstractSequentialList.cpp
         java/util/AbstractSequentialList.h
+        java/util/Queue.h
 )
 target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR})
