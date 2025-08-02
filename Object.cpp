@@ -7,6 +7,9 @@
 
 #include "String.h"
 
+std::unordered_map<std::thread::id, std::stop_token> _G_stop_tokens;
+std::unordered_map<std::thread::id, std::stop_source> _G_stop_sources;
+
 std::unordered_map<std::type_index, internals::typeData> typeMap;
 
 lateinit_stack _G_stack;

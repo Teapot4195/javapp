@@ -68,9 +68,11 @@ namespace java::util {
         if (_size + 1 >= _capacity)
             resize(2 * _capacity);
 
-        std::copy_backward(_array, _array + _size, _array + 1);
+        std::copy_backward(_array + index, _array + _size, _array + 1 + _size);
 
         _array[index] = element;
+
+        _size++;
     }
 
     bool ArrayList::add(const shared<Object> e) {
@@ -86,7 +88,7 @@ namespace java::util {
         const auto it = c->iterator();
 
         ensureCapacity(size() + c->size());
-        std::copy_backward(_array + index, _array + _size, _array + index + c->size());
+        std::copy_backward(_array + index, _array + _size, _array + _size + c->size());
 
         int i = 0;
         while (it->hasNext()) {
@@ -234,6 +236,8 @@ namespace java::util {
 
         std::copy(_array + index + 1, _array + _size, _array + index);
 
+        _size--;
+
         return prev;
     }
 
@@ -244,6 +248,8 @@ namespace java::util {
                 return true;
             }
         }
+
+        _size--;
 
         return false;
     }
