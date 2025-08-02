@@ -128,5 +128,6 @@ add_library(javapp STATIC
         java/util/AbstractSequentialList.cpp
         java/util/AbstractSequentialList.h
         java/util/Queue.h
+        java/util/Deque.h
 )
 target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR})
