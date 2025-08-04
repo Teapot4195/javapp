@@ -26,3 +26,5 @@ templated variant that accepts shared_ptrs from object, investigate how to fix,
 preferably in a user friendly way, `.get()` is kind of ugly.
 - It has been "fixed" if you override the method you can use the
 `DEFINE_SHARED_EQUALS` macro to redefine the templated shared\<\> equals overload.
+
+Most of the class implementations are very naive and less than optimal, 

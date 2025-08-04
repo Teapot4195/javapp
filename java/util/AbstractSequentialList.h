@@ -8,6 +8,7 @@ namespace java::util {
     protected:
         AbstractSequentialList() = default;
 
+    private:
         void checkBounds(int index);
 
     public:
