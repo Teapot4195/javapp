@@ -131,5 +131,7 @@ add_library(javapp STATIC
         java/util/Deque.h
         java/util/LinkedList.cpp
         java/util/LinkedList.h
+        java/util/AbstractSet.cpp
+        java/util/AbstractSet.h
 )
 target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR})

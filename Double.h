@@ -3,6 +3,8 @@
 #include <Object.h>
 
 class Double : public virtual Object {
+    double wrapped = 0;
+
 public:
     static constexpr int BYTES = sizeof(double);
     static constexpr int MAX_EXPONENT = std::numeric_limits<double>::max_exponent();
