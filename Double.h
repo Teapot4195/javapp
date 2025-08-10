@@ -7,9 +7,9 @@ class Double : public virtual Object {
 
 public:
     static constexpr int BYTES = sizeof(double);
-    static constexpr int MAX_EXPONENT = std::numeric_limits<double>::max_exponent();
+    static constexpr int MAX_EXPONENT = std::numeric_limits<double>::max_exponent;
     static constexpr double MAX_VALUE = std::numeric_limits<double>::max();
-    static constexpr int MIN_EXPONENT = std::numeric_limits<double>::min_exponent();
+    static constexpr int MIN_EXPONENT = std::numeric_limits<double>::min_exponent;
     static constexpr double MIN_NORMAL = std::numeric_limits<double>::lowest();
     static constexpr double MIN_VALUE = std::numeric_limits<double>::min();
     static constexpr double NaN = std::numeric_limits<double>::quiet_NaN();

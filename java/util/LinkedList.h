@@ -61,6 +61,8 @@ namespace java::util {
 
         int indexOf(shared<Object> o) override;
 
+        shared<Iterator> iterator() override;
+
         int lastIndexOf(shared<Object> o) override;
 
         shared<ListIterator> listIterator(int index) override;

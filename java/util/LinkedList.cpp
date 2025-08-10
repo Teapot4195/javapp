@@ -8,12 +8,12 @@
 #include "function/Consumer.h"
 
 namespace java::util {
-    void LinkedList::checkBounds(const int index) const {
+    constexpr void LinkedList::checkBounds(const int index) const {
         if (index < 0 || index >= _size)
             throw std::runtime_error("THROW INDEXOUTOFBOUNDSEXCEPTION");
     }
 
-    void LinkedList::checkNotEmpty() const {
+    constexpr void LinkedList::checkNotEmpty() const {
         if (_size == 0)
             throw std::runtime_error("THROW NOSUCHELEMENTEXCEPTION");
     }
@@ -226,6 +226,56 @@ namespace java::util {
         return false;
     }
 
+    class LinkedList_ListIteratorDescending final : public virtual Object, public virtual ListIterator {
+        shared<LinkedList> parent;
+        int index; ///< represents the index @function next would return
+        int modCount;
+
+    public:
+        LinkedList_ListIteratorDescending(const shared<LinkedList> &parent, const int index) : parent(parent), index(index),
+            modCount(parent->modCount) {}
+
+        void add(const shared<Object> e) override {
+            parent->add(index, e);
+        }
+
+        bool hasPrevious() override {
+            return index != parent->_size;
+        }
+
+        bool hasNext() override {
+            return index - 1 >= 0;
+        }
+
+        shared<Object> previous() override {
+            if (index < parent->_size)
+                return parent->get(index++);
+            throw std::runtime_error("THROW NOSUCHELEMENTEXCEPTION");
+        }
+
+        int previousIndex() override {
+            return index;
+        }
+
+        shared<Object> next() override {
+            if (index >= 0)
+                return parent->get(index--);
+            throw std::runtime_error("THROW NOSUCHELEMENTEXCEPTION");
+        }
+
+        int nextIndex() override {
+            return index - 1;
+        }
+
+        void remove() override {
+            parent->remove(index);
+        }
+
+        void set(const shared<Object> e) override {
+            parent->set(index, e);
+        }
+    };
+
     shared<Iterator> LinkedList::descendingIterator() {
         return std::dynamic_pointer_cast<Iterator>(alloc<LinkedList_ListIteratorDescending>(std::dynamic_pointer_cast<LinkedList>(shared_from_this()), _size));
     }
@@ -276,6 +326,10 @@ namespace java::util {
         }
 
         return -1;
+    }
+
+    shared<Iterator> LinkedList::iterator() {
+        return AbstractSequentialList::iterator();
     }
 
     int LinkedList::lastIndexOf(const shared<Object> o) {
@@ -336,56 +390,6 @@ namespace java::util {
         }
 
         int previousIndex() override {
-            return index - 1;
-        }
-
-        void remove() override {
-            parent->remove(index);
-        }
-
-        void set(const shared<Object> e) override {
-            parent->set(index, e);
-        }
-    };
-
-    class LinkedList_ListIteratorDescending final : public virtual Object, public virtual ListIterator {
-        shared<LinkedList> parent;
-        int index; ///< represents the index @function next would return
-        int modCount;
-
-    public:
-        LinkedList_ListIteratorDescending(const shared<LinkedList> &parent, const int index) : parent(parent), index(index),
-            modCount(parent->modCount) {}
-
-        void add(const shared<Object> e) override {
-            parent->add(index, e);
-        }
-
-        bool hasPrevious() override {
-            return index != parent->_size;
-        }
-
-        bool hasNext() override {
-            return index - 1 >= 0;
-        }
-
-        shared<Object> previous() override {
-            if (index < parent->_size)
-                return parent->get(index++);
-            throw std::runtime_error("THROW NOSUCHELEMENTEXCEPTION");
-        }
-
-        int previousIndex() override {
-            return index;
-        }
-
-        shared<Object> next() override {
-            if (index >= 0)
-                return parent->get(index--);
-            throw std::runtime_error("THROW NOSUCHELEMENTEXCEPTION");
-        }
-
-        int nextIndex() override {
             return index - 1;
         }
 
@@ -754,7 +758,7 @@ namespace java::util {
     };
 
     shared<Spliterator> LinkedList::spliterator() {
-        return alloc<LinkedList_Spliterator_Specialization>(std::dynamic_pointer_cast<LinkedList_Spliterator_Specialization>(shared_from_this()), 0, _size);
+        return alloc<LinkedList_Spliterator_Specialization>(std::dynamic_pointer_cast<LinkedList>(shared_from_this()), 0, _size);
     }
 
     shared<Array<>> LinkedList::toArray() {

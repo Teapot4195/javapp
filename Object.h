@@ -192,7 +192,8 @@ public:
     template <class T>
     requires std::derived_from<T, Object>
     bool instanceof() {
-        return dynamic_cast<T*>(this) != nullptr;
+        auto* n = dynamic_cast<T*>(this);
+        return n != nullptr;
     }
 
     internals::deferable synchronize();
