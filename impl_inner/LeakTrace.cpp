@@ -175,7 +175,7 @@ void impl_internal::printLeaks() {
     for (auto& [key, data] : allocMap) {
 #ifdef JAVAPP_TRACE_ALLOCS_STACKTRACE
         fprintf(stderr, "LEAK DETECTION: - %p (leaked %lu bytes with alignment %d)\n", key, data.size, static_cast<int>(data.align));
-        fprintf(stderr, "LEAK DETECTION:     Allocation trace is as follows:\n");
+        fprintf(stderr, "LEAK DETECTION:     Allocation trace is as follows (most recent call first):\n");
         char** backtrace = backtrace_symbols(data.backtraceBuffer, data.backtraceBufferSize);
         for (int i = 0; i < data.backtraceBufferSize; i++) {
             if (data.backtraceBuffer[i] == nullptr)
