@@ -1,9 +1,13 @@
 #include "Object.h"
 
+#include <cstring>
 #include <format>
 #include <iostream>
 #include <typeindex>
 #include <stacktrace>
+
+#include <execinfo.h>
+#include <cxxabi.h>
 
 #include "String.h"
 
@@ -131,4 +135,46 @@ internals::deferable Object::synchronize() {
             this->_monitor_mutex.unlock();
         }}
     );
+}
+
+void panic(const char *msg) {
+    fprintf(stderr, "java++ panicked due to an irrecoverable state (%s)!\n", msg);
+    fprintf(stderr, "Call stack (most recent call first):\n");
+    const auto bt = static_cast<void**>(malloc(500 * sizeof(void*)));
+    const auto count = backtrace(bt, 500);
+    char** backtrace = backtrace_symbols(bt, count);
+    for (int i = 0; i < count; i++) {
+        if (bt[i] == nullptr)
+            continue;
+        char* demangled = nullptr;
+        if (char *left_par = nullptr, *plus = nullptr;
+            ((left_par = strchr(backtrace[i], '('))) && ((plus = strchr(left_par, '+')))) {
+            char tmp = '\0';
+            std::swap(tmp, *plus);
+            int status = 0;
+            demangled = abi::__cxa_demangle(left_par + 1, nullptr, nullptr, &status);
+            std::swap(tmp, *plus);
+
+            if (demangled) {
+                size_t need_extra = strlen(plus), demangled_size = strlen(demangled);
+                char* res = static_cast<char *>(malloc(demangled_size + need_extra + 1));
+                memcpy(res, demangled, demangled_size);
+                memcpy(res + demangled_size, plus, need_extra);
+                res[demangled_size + need_extra] = '\0';
+                free(demangled);
+
+                demangled = res;
+            }
+        }
+        fprintf(stderr, " - [%d] %p: %s\n", i, bt[i], demangled ? demangled : backtrace[i]);
+        free(demangled);
+    }
+    free(backtrace);
+    free(bt);
+
+    std::exit(1);
+}
+
+void panic(const std::string &msg) {
+    panic(msg.data());
 }

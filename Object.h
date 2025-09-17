@@ -224,3 +224,18 @@ std::vector<shared<Object>> decay_vec(const std::vector<shared<T>>& source) {
 
     return result;
 }
+
+#define FOREACH(type, variable, iterable, body)                                     \
+{                                                                                   \
+    shared<java::util::Iterator> it = iterable->iterator();                         \
+    while (it->hasNext()) {                                                         \
+        const shared<type> variable = std::dynamic_pointer_cast<type>(it->next());  \
+        body                                                                        \
+    }                                                                               \
+}
+
+#define null nullptr
+
+[[noreturn]] void panic(const char* msg);
+
+[[noreturn]] void panic(const std::string& msg);
