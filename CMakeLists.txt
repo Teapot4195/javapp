@@ -3,9 +3,25 @@ project(javapp)
 
 set(CMAKE_CXX_STANDARD 26)
 
+option(JAVAPP_ENABLE_LEAK_TRACING "Enable leak tracing for the java++ library, including projects built using it." OFF)
+option(JAVAPP_ENABLE_LEAK_STACKTRACE "Enable leak tracing with stacktraces, this is quite expensive, best not to turn it on when not neccesary" OFF)
+
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
     doxygen_add_docs(docs ${CMAKE_SOURCE_DIR} ALL)
+endif()
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    if(JAVAPP_ENABLE_LEAK_TRACING)
+        add_compile_definitions(JAVAPP_TRACE_ALLOCS)
+        if (JAVAPP_ENABLE_LEAK_STACKTRACE)
+            add_compile_definitions(JAVAPP_TRACE_ALLOCS_STACKTRACE)
+            set(CMAKE_ENABLE_EXPORTS TRUE)
+            add_compile_options(-fno-omit-frame-pointer)
+        endif()
+    endif()
+else()
+    message("Leak Tracing is enabled, but is not supported on non linux systems (yet)!")
 endif()
 
 add_library(javapp STATIC
@@ -133,5 +149,7 @@ add_library(javapp STATIC
         java/util/LinkedList.h
         java/util/AbstractSet.cpp
         java/util/AbstractSet.h
+        impl_inner/LeakTrace.h
+        impl_inner/LeakTrace.cpp
 )
 target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR})
