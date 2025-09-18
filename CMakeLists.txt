@@ -149,7 +149,12 @@ add_library(javapp STATIC
         java/util/LinkedList.h
         java/util/AbstractSet.cpp
         java/util/AbstractSet.h
+        impl_inner/SwissTableHashMap.cpp
+        impl_inner/SwissTableHashMap.h
         impl_inner/LeakTrace.h
         impl_inner/LeakTrace.cpp
+        impl_inner/SwissTableHashSet.cpp
+        impl_inner/SwissTableHashSet.h
+        impl_inner/HashTableCommon.h
 )
 target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR})
