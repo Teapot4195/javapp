@@ -239,3 +239,7 @@ std::vector<shared<Object>> decay_vec(const std::vector<shared<T>>& source) {
 [[noreturn]] void panic(const char* msg);
 
 [[noreturn]] void panic(const std::string& msg);
+
+int main(int argc, char** argv);
+
+int jmain(int argc, char** argv);

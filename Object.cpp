@@ -8,6 +8,7 @@
 
 #include <execinfo.h>
 #include <cxxabi.h>
+#include <csignal>
 
 #include "String.h"
 
@@ -177,4 +178,22 @@ void panic(const char *msg) {
 
 void panic(const std::string &msg) {
     panic(msg.data());
+}
+
+int main(int argc, char **argv) {
+    auto handler = [](int sig, siginfo_t* si, void* unused) {
+        char buffer[1024];
+        sprintf(buffer, "Attempted to dereference a NULL pointer at 0x%p\n", si->si_addr);
+        panic(buffer);
+    };
+
+    struct sigaction sa{};
+
+    sa.sa_flags = SA_SIGINFO;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_sigaction = handler;
+    if (sigaction(SIGSEGV, &sa, nullptr) == -1)
+        fprintf(stderr, "WARN: unable to register SIGSEGV handler! There will be no exception on crash!");
+
+    return jmain(argc, argv);
 }
