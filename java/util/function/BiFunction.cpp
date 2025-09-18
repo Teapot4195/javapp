@@ -6,8 +6,8 @@
 
 namespace java::util::function {
     shared<BiFunction> BiFunction::andThen(shared<Function> after) {
-        return alloc<BiFunction>([=](const shared<Object> &T, const shared<Object> &U) -> shared<Object> {
-            return after->apply(apply(T, U));
+        return alloc<BiFunction>(lambda(const shared<Object> &T, const shared<Object> &U) -> shared<Object> {
+            return after->apply(self->apply(T, U));
         });
     }
 

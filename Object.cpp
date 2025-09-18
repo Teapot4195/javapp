@@ -181,7 +181,7 @@ void panic(const std::string &msg) {
 }
 
 int main(int argc, char **argv) {
-    auto handler = [](int sig, siginfo_t* si, void* unused) {
+    auto handler = [](int sig, siginfo_t* si, void* _) {
         char buffer[1024];
         sprintf(buffer, "Attempted to dereference a NULL pointer at 0x%p\n", si->si_addr);
         panic(buffer);

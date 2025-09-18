@@ -112,8 +112,8 @@ namespace java::util {
     }
 
     shared<Comparator> Comparator::reversed() {
-        return alloc<Comparator>([=](const shared<Object> &o1, const shared<Object> &o2) {
-            return -1 * compare(o1, o2);
+        return alloc<Comparator>(lambda(const shared<Object> &o1, const shared<Object> &o2) {
+            return -1 * self->compare(o1, o2);
         });
     }
 
@@ -122,8 +122,8 @@ namespace java::util {
     }
 
     shared<Comparator> Comparator::thenComparing(const shared<Comparator> other) {
-        return alloc<Comparator>([=](const shared<Object> &o1, const shared<Object> &o2) {
-            const auto first = compare(o1, o2);
+        return alloc<Comparator>(lambda(const shared<Object> &o1, const shared<Object> &o2) {
+            const auto first = self->compare(o1, o2);
             return first == 0 ? other->compare(o1, o2) : first;
         });
     }

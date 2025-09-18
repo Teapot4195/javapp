@@ -2,22 +2,22 @@
 
 namespace java::util::function {
     shared<BiPredicate> BiPredicate::And(shared<BiPredicate> other) {
-        return alloc<BiPredicate>([=, this](const shared<Object> &t, const shared<Object> &u) -> bool {
-            if (!test(t, u))
+        return alloc<BiPredicate>(lambda(const shared<Object> &t, const shared<Object> &u) -> bool {
+            if (!self->test(t, u))
                 return false;
             return other->test(t, u);
         });
     }
 
     shared<BiPredicate> BiPredicate::negate() {
-        return alloc<BiPredicate>([=, this](const shared<Object> &t, const shared<Object> &u) -> bool {
-            return !test(t, u);
+        return alloc<BiPredicate>(lambda(const shared<Object> &t, const shared<Object> &u) -> bool {
+            return !self->test(t, u);
         });
     }
 
     shared<BiPredicate> BiPredicate::Or(shared<BiPredicate> other) {
-        return alloc<BiPredicate>([=, this](const shared<Object> &t, const shared<Object> &u) -> bool {
-            if (test(t, u))
+        return alloc<BiPredicate>(lambda(const shared<Object> &t, const shared<Object> &u) -> bool {
+            if (self->test(t, u))
                 return true;
             return other->test(t, u);
         });

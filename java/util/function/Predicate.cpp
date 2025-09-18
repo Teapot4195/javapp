@@ -6,8 +6,8 @@
 
 namespace java::util::function {
     shared<Predicate> Predicate::And(const shared<Predicate> other) {
-        return alloc<Predicate>([=](const shared<Object>& value) -> bool {
-            if (!test(value))
+        return alloc<Predicate>(lambda(const shared<Object>& value) -> bool {
+            if (!self->test(value))
                 return false;
             return other->test(value);
         });
@@ -26,14 +26,14 @@ namespace java::util::function {
     }
 
     shared<Predicate> Predicate::negate() {
-        return alloc<Predicate>([=](const shared<Object>& value) -> bool {
-            return !test(value);
+        return alloc<Predicate>(lambda(const shared<Object>& value) -> bool {
+            return !self->test(value);
         });
     }
 
     shared<Predicate> Predicate::Or(const shared<Predicate> other) {
-        return alloc<Predicate>([=](const shared<Object>& value) -> bool {
-            if (test(value))
+        return alloc<Predicate>(lambda(const shared<Object>& value) -> bool {
+            if (self->test(value))
                 return true;
             return other->test(value);
         });

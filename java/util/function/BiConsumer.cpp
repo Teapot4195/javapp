@@ -6,8 +6,8 @@ namespace java::util::function {
     }
 
     shared<BiConsumer> BiConsumer::andThen(const shared<BiConsumer> after) {
-        return alloc<BiConsumer>([=](const shared<Object> &T, const shared<Object> &U) {
-            accept(T, U);
+        return alloc<BiConsumer>(lambda(const shared<Object> &T, const shared<Object> &U) {
+            self->accept(T, U);
             after->accept(T, U);
         });
     }

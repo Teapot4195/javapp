@@ -236,6 +236,8 @@ std::vector<shared<Object>> decay_vec(const std::vector<shared<T>>& source) {
 
 #define null nullptr
 
+#define lambda [=, self=std::dynamic_pointer_cast<std::remove_reference_t<decltype(*this)>>(shared_from_this())]
+
 [[noreturn]] void panic(const char* msg);
 
 [[noreturn]] void panic(const std::string& msg);

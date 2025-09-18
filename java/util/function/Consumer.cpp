@@ -5,9 +5,9 @@ namespace java::util::function {
         inner(std::move(T));
     }
 
-    shared<Consumer> Consumer::andThen(shared<Consumer> after) {
-        return alloc<Consumer>([=](shared<Object> obj) {
-            this->accept(obj);
+    shared<Consumer> Consumer::andThen(const shared<Consumer> after) {
+        return alloc<Consumer>(lambda(const shared<Object> &obj) {
+            self->accept(obj);
             after->accept(obj);
         });
     }
