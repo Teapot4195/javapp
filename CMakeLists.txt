@@ -8,7 +8,7 @@ option(JAVAPP_ENABLE_LEAK_STACKTRACE "Enable leak tracing with stacktraces, this
 
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
-    doxygen_add_docs(docs ${CMAKE_SOURCE_DIR} ALL)
+    doxygen_add_docs(docs src ALL)
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
