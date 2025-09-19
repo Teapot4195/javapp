@@ -12,6 +12,8 @@ class SwissTableHashMap {
 public:
     SwissTableHashMap();
 
+    explicit SwissTableHashMap(int defaultSize);
+
     explicit SwissTableHashMap(const shared<java::util::Map> &map);
 
     std::pair<bool, shared<Object>> table_delete(const shared<Object> &key);
@@ -49,6 +51,8 @@ public:
     size_t bucket_count{};
     size_t tombstone_count{};
     size_t table_size{};
+
+    float load_factor_internal {};
 
     swisstable* table {nullptr};
     metadata* metadata {nullptr};

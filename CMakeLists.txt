@@ -149,6 +149,10 @@ add_library(javapp STATIC
         java/util/LinkedList.h
         java/util/AbstractSet.cpp
         java/util/AbstractSet.h
+        java/util/Map.cpp
+        java/util/Map.h
+        impl_inner/UnmodifiableMap.cpp
+        impl_inner/UnmodifiableMap.h
         impl_inner/SwissTableHashMap.cpp
         impl_inner/SwissTableHashMap.h
         impl_inner/LeakTrace.h

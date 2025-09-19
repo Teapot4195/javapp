@@ -31,6 +31,8 @@ namespace java::util {
 
         bool equals(Object *obj) override;
 
+        DEFINE_SHARED_EQUALS
+
         int hashCode() override;
 
         virtual bool isEmpty() = 0;

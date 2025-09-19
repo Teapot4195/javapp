@@ -46,6 +46,8 @@ namespace java::util {
 
         shared<Array<>> toArray(shared<function::IntFunction> generator) override;
 
+        // TODO: overload the equals to
+
     private:
         SwissTableHashSet* table;
 

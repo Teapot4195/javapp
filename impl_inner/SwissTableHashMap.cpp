@@ -8,6 +8,14 @@ SwissTableHashMap::SwissTableHashMap() {
     table = new swisstable[default_bucket_count];
     metadata = new struct metadata[default_bucket_count];
     bucket_count = default_bucket_count;
+    load_factor_internal = load_factor_limit;
+}
+
+SwissTableHashMap::SwissTableHashMap(int defaultSize) {
+    table = new swisstable[defaultSize];
+    metadata = new struct metadata[defaultSize];
+    bucket_count = defaultSize;
+    load_factor_internal = load_factor_limit;
 }
 
 SwissTableHashMap::SwissTableHashMap(const shared<java::util::Map> &map) {
@@ -22,16 +30,17 @@ SwissTableHashMap::SwissTableHashMap(const shared<java::util::Map> &map) {
         if (!table_insert_or_set(key, value))
             throw std::runtime_error("THROW ARGUMENTEXCEPTION!");
     });
+    load_factor_internal = load_factor_limit;
 }
 
 std::pair<bool, shared<Object>> SwissTableHashMap::table_delete(const shared<Object> &key) {
-    if (load_factor() > load_factor_limit || tombstone_factor() > tombstone_factor_limit)
+    if (load_factor() > load_factor_internal || tombstone_factor() > tombstone_factor_limit)
         rebuild_table();
     return delete_table(table, metadata, bucket_count, key->hashCode(), key);
 }
 
 bool SwissTableHashMap::table_insert_or_set(const shared<Object> &key, const shared<Object> &value) {
-    if (load_factor() > load_factor_limit || tombstone_factor() > tombstone_factor_limit)
+    if (load_factor() > load_factor_internal || tombstone_factor() > tombstone_factor_limit)
         rebuild_table();
     return insert_table(table, metadata, bucket_count, key->hashCode(), key, value);
 }
