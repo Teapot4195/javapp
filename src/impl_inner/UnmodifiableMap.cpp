@@ -1,6 +1,6 @@
 #include "UnmodifiableMap.h"
 
-#include <String.h>
+#include <../src/String.h>
 #include <java/util/ArrayList.h>
 #include <java/util/HashSet.h>
 #include <java/util/Iterator.h>

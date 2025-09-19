@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Array.h>
 #include "AbstractSequentialList.h"
 #include "Cloneable.h"
 #include "Deque.h"

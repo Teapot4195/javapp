@@ -1,9 +1,9 @@
 #include "Iterable.h"
 
 #include "Long.h"
-#include "java/util/Iterator.h"
-#include "java/util/Spliterator.h"
-#include "java/util/function/Consumer.h"
+#include <java/util/Iterator.h>
+#include <java/util/Spliterator.h>
+#include <java/util/function/Consumer.h>
 
 void Iterable::forEach(shared<java::util::function::Consumer> action) {
     const auto it = iterator();

@@ -1,10 +1,12 @@
 #pragma once
 
 #include <Cloneable.h>
-#include "List.h"
 #include <Object.h>
+
+#include "List.h"
 #include "AbstractList.h"
 #include "RandomAccess.h"
+
 #include <java/io/Serializable.h>
 
 namespace java::util {

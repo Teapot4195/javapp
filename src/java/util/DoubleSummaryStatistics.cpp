@@ -1,8 +1,8 @@
 #include "DoubleSummaryStatistics.h"
 
-#include <Double.h>
+#include <../../src/Double.h>
 #include <format>
-#include <String.h>
+#include <../../src/String.h>
 
 namespace java::util {
     DoubleSummaryStatistics::DoubleSummaryStatistics()

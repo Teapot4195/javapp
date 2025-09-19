@@ -1,6 +1,6 @@
 #include "IntConsumer.h"
 
-#include "java/util/stream/LongStream.h"
+#include <java/util/stream/LongStream.h>
 
 namespace java::util::function {
     void IntConsumer::accept(const int value) {
