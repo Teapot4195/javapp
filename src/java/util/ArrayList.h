@@ -25,6 +25,8 @@ namespace java::util {
         friend class ArrayList_Spliterator_Specialization;
 
     public:
+        ~ArrayList() override;
+
         ArrayList();
 
         explicit ArrayList(int initialCapacity);

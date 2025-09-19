@@ -40,6 +40,11 @@ namespace java::util {
         _capacity = newSize;
     }
 
+    ArrayList::~ArrayList() {
+        if (_capacity > 0)
+            delete[] _array;
+    }
+
     ArrayList::ArrayList() : ArrayList(10) {}
 
     ArrayList::ArrayList(const int initialCapacity) : _array(new shared<Object>[initialCapacity]), _size(0),
