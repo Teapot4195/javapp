@@ -2,9 +2,8 @@
 
 #include <Object.h>
 
-#include "HashTableCommon.h"
-
 namespace java::util {
+    class Collection;
     class Map;
 }
 
@@ -12,13 +11,17 @@ class SwissTableHashSet {
 public:
     SwissTableHashSet();
 
-    explicit SwissTableHashSet(const shared<java::util::Map> &map);
+    explicit SwissTableHashSet(int initialCapacity);
+
+    SwissTableHashSet(int initialCapacity, float loadFactor);
+
+    explicit SwissTableHashSet(const shared<java::util::Collection> &collection);
 
     bool table_delete(const shared<Object> &key);
 
     bool table_insert_or_set(const shared<Object> &key);
 
-    bool table_get(const shared<Object> &key) const;
+    [[nodiscard]] bool table_get(const shared<Object> &key) const;
 
     [[nodiscard]] constexpr float load_factor() const;
 
@@ -26,12 +29,18 @@ public:
 
     void rebuild_table(size_t new_bucket_count);
 
-    void table_clear();
-
     /**
      * @brief Rebuild this hash table, removing the deleted entries.
      */
     void rebuild_table();
+
+    void table_clear();
+
+    /**
+     * @brief Shallow cloning function
+     * @return Clones the data-structure that holds the hashes, nothing else. Objects **ARE NOT** cloned.
+     */
+    [[nodiscard]] SwissTableHashSet* clone() const;
 
 #pragma pack(1)
     struct swisstable {
@@ -48,6 +57,7 @@ public:
     size_t bucket_count{};
     size_t tombstone_count{};
     size_t table_size{};
+    double load_factor_internal;
 
     swisstable* table {nullptr};
     metadata* metadata {nullptr};

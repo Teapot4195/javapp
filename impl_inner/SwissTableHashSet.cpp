@@ -1,5 +1,7 @@
 #include "SwissTableHashSet.h"
 
+#include <HashTableCommon.h>
+
 #include <java/util/Iterator.h>
 #include <java/util/Map.h>
 #include <java/util/Set.h>
@@ -8,30 +10,47 @@ SwissTableHashSet::SwissTableHashSet() {
     table = new swisstable[default_bucket_count];
     metadata = new struct metadata[default_bucket_count];
     bucket_count = default_bucket_count;
+    load_factor_internal = load_factor_limit;
 }
 
-SwissTableHashSet::SwissTableHashSet(const shared<java::util::Map> &map) {
+SwissTableHashSet::SwissTableHashSet(int initialCapacity) {
+    table = new swisstable[initialCapacity];
+    metadata = new struct metadata[initialCapacity];
+    bucket_count = initialCapacity;
+    load_factor_internal = load_factor_limit;
+}
+
+SwissTableHashSet::SwissTableHashSet(int initialCapacity, const float loadFactor) {
+    initialCapacity = initialCapacity / loadFactor; // adjust for needing some additional entries to satisfy loadFactor.
+    table = new swisstable[initialCapacity];
+    metadata = new struct metadata[initialCapacity];
+    bucket_count = initialCapacity;
+    load_factor_internal = loadFactor;
+}
+
+SwissTableHashSet::SwissTableHashSet(const shared<java::util::Collection> &collection) {
+    if (!collection)
+        throw std::runtime_error("THROW NULLPOINTEREXCEPTION!");
     table = new swisstable[default_bucket_count];
     metadata = new struct metadata[default_bucket_count];
     bucket_count = default_bucket_count;
-    FOREACH(java::util::Map::Entry, x, map->entrySet(), {
-        auto key = x->getKey();
-        auto value = x->getValue();
-        if (!key || !value)
+    load_factor_internal = load_factor_limit;
+    FOREACH(Object, x, collection, {
+        if (!x)
             throw std::runtime_error("THROW NULLPOINTEREXCEPTION!");
-        if (!table_insert_or_set(key))
+        if (!table_insert_or_set(x))
             throw std::runtime_error("THROW ARGUMENTEXCEPTION!");
     });
 }
 
 bool SwissTableHashSet::table_delete(const shared<Object> &key) {
-    if (load_factor() > load_factor_limit || tombstone_factor() > tombstone_factor_limit)
+    if (load_factor() > load_factor_internal || tombstone_factor() > tombstone_factor_limit)
         rebuild_table();
     return delete_table(table, metadata, bucket_count, key->hashCode(), key);
 }
 
 bool SwissTableHashSet::table_insert_or_set(const shared<Object> &key) {
-    if (load_factor() > load_factor_limit || tombstone_factor() > tombstone_factor_limit)
+    if (load_factor() > load_factor_internal || tombstone_factor() > tombstone_factor_limit)
         rebuild_table();
     return insert_table(table, metadata, bucket_count, key->hashCode(), key);
 }
@@ -73,6 +92,16 @@ void SwissTableHashSet::table_clear() {
 
     table_size = 0;
     tombstone_count = 0;
+}
+
+SwissTableHashSet * SwissTableHashSet::clone() const {
+    auto* res = new SwissTableHashSet(bucket_count, load_factor_internal);
+    for (int i = 0; i < bucket_count; i++) {
+        res->table[i] = table[i];
+        res->metadata[i] = metadata[i];
+    }
+
+    return res;
 }
 
 void SwissTableHashSet::rebuild_table() {

@@ -156,5 +156,7 @@ add_library(javapp STATIC
         impl_inner/SwissTableHashSet.cpp
         impl_inner/SwissTableHashSet.h
         impl_inner/HashTableCommon.h
+        java/util/HashSet.cpp
+        java/util/HashSet.h
 )
 target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR})
