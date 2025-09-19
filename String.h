@@ -25,4 +25,10 @@ public:
     DEFINE_SHARED_EQUALS
 
     std::string& get_backing();
+
+    /**
+     * @brief Implicit conversion operator, automatically allowing a String to decay to it's backing string, saving
+     * one call.
+     */
+    operator std::string();
 };

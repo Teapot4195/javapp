@@ -18,3 +18,7 @@ bool String::equals(Object *obj) {
 std::string & String::get_backing() {
     return backing;
 }
+
+String::operator std::string() {
+    return backing;
+}
