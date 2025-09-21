@@ -13,6 +13,7 @@ namespace java::util {
     Optional::Optional(const shared<Object> &value) : hasValue(true), value(value) {}
 
     shared<Optional> Optional::empty() {
+        // TODO: make this one return a global object instead!
         return alloc<Optional>();
     }
 
