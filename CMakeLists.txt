@@ -191,6 +191,8 @@ add_library(javapp STATIC
         src/impl_inner/streams/pipeline/PipelineSkip.h
         src/impl_inner/streams/pipeline/PipelineArrayListSource.cpp
         src/impl_inner/streams/pipeline/PipelineArrayListSource.h
+        src/Number.cpp
+        src/Number.h
 )
 target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR})
 target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR}/src)
