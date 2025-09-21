@@ -169,5 +169,29 @@ add_library(javapp STATIC
         src/java/util/HashSet.h
         src/ThreadLocal.cpp
         src/ThreadLocal.h
+        src/impl_inner/streams/pipeline/PipelineSpliteratorSource.cpp
+        src/impl_inner/streams/pipeline/PipelineSpliteratorSource.h
+        src/impl_inner/streams/pipeline/AbstractPipeline.cpp
+        src/impl_inner/streams/pipeline/AbstractPipeline.h
+        src/impl_inner/streams/pipeline/PipelineStreamAdaptor.cpp
+        src/impl_inner/streams/pipeline/PipelineStreamAdaptor.h
+        src/impl_inner/streams/pipeline/PipelineDistinctEntries.cpp
+        src/impl_inner/streams/pipeline/PipelineDistinctEntries.h
+        src/impl_inner/streams/pipeline/PipelineFilterEntries.cpp
+        src/impl_inner/streams/pipeline/PipelineFilterEntries.h
+        src/impl_inner/streams/pipeline/PipelineFlatMap.cpp
+        src/impl_inner/streams/pipeline/PipelineFlatMap.h
+        src/impl_inner/streams/pipeline/PipelineLimit.cpp
+        src/impl_inner/streams/pipeline/PipelineLimit.h
+        src/impl_inner/streams/pipeline/PipelineMap.cpp
+        src/impl_inner/streams/pipeline/PipelineMap.h
+        src/impl_inner/streams/pipeline/PipelinePeek.cpp
+        src/impl_inner/streams/pipeline/PipelinePeek.h
+        src/impl_inner/streams/pipeline/PipelineSkip.cpp
+        src/impl_inner/streams/pipeline/PipelineSkip.h
+        src/impl_inner/streams/pipeline/PipelineArrayListSource.cpp
+        src/impl_inner/streams/pipeline/PipelineArrayListSource.h
 )
 target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR})
+target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR}/src)
+target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR}/src/impl_inner)
