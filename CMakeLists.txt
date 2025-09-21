@@ -29,6 +29,8 @@ if (JAVAPP_ENABLE_INTERNAL_ASSERTIONS)
     add_compile_definitions(JAVAPP_ENABLE_INTERNAL_ASSERTIONS)
 endif()
 
+add_compile_options(-Wall)
+
 add_library(javapp STATIC
         src/Object.cpp
         src/Object.h
@@ -191,6 +193,8 @@ add_library(javapp STATIC
         src/impl_inner/streams/pipeline/PipelineSkip.h
         src/impl_inner/streams/pipeline/PipelineArrayListSource.cpp
         src/impl_inner/streams/pipeline/PipelineArrayListSource.h
+        src/Integer.cpp
+        src/Integer.h
         src/Number.cpp
         src/Number.h
 )
