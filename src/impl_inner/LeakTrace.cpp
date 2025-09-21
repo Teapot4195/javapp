@@ -42,7 +42,7 @@ struct Mallocator
 struct AllocInfo {
     size_t size;
     std::align_val_t align;
-#ifdef JAVAPP_TRACE_ALLOCS
+#ifdef JAVAPP_TRACE_ALLOCS_STACKTRACE
     void** backtraceBuffer;
     size_t backtraceBufferSize;
 
