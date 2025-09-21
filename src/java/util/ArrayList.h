@@ -9,6 +9,8 @@
 
 #include <java/io/Serializable.h>
 
+class Comparable;
+
 namespace java::util {
     class ArrayList : public virtual Object, public virtual List, public virtual RandomAccess, public virtual Cloneable,
                       public virtual AbstractList, public virtual io::Serializable {
@@ -98,5 +100,22 @@ namespace java::util {
         shared<Array<>> toArray(shared<Array<>> a) override;
 
         virtual void trimToSize();
+
+        void sort();
+
+        void sort(shared<Comparator> c) override;
+
+    private:
+        static void MergeSort(shared<Comparable>* a, shared<Comparable>* work, size_t n);
+
+        static void SplitMerge(shared<Comparable>* b, size_t iBegin, size_t iEnd, shared<Comparable>* a);
+
+        static void Merge(shared<Comparable>* b, size_t iBegin, size_t iMiddle, size_t iEnd, shared<Comparable>* a);
+
+        static void MergeSortComparator(shared<Object>* a, shared<Object>* work, size_t n, shared<Comparator> comparator);
+
+        static void SplitMergeComparator(shared<Object>* b, size_t iBegin, size_t iEnd, shared<Object>* a, shared<Comparator> comparator);
+
+        static void MergeComparator(shared<Object>* b, size_t iBegin, size_t iMiddle, size_t iEnd, shared<Object>* a, shared<Comparator> comparator);
     };
 }

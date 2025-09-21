@@ -1,10 +1,15 @@
 #include "ArrayList.h"
 
+#include <Comparable.h>
+
 #include "Iterator.h"
 #include "Objects.h"
 #include "Spliterator.h"
 #include "function/Consumer.h"
 #include "function/Predicate.h"
+
+#include <cstring>
+#include <java/util/Comparator.h>
 
 // TODO: implementor's note, we can probably slab allocate a large block of memory from a custom class, this allows
 // us to avoid a lot of alloc delete calls (probably). /shrug
@@ -428,5 +433,92 @@ namespace java::util {
         delete[] _array;
 
         _array = newArray;
+    }
+
+    void ArrayList::sort() {
+        shared<Comparable> *a = new shared<Comparable>[_size], *work = new shared<Comparable>[_size];
+
+        for (size_t i = 0; i < _size; i++)
+            work[i] = a[i] = std::dynamic_pointer_cast<Comparable>(_array[i]);
+
+        MergeSort(a, work, _size);
+
+        delete[] work;
+
+        std::copy_n(a, _size, _array);
+
+        delete[] a;
+    }
+
+    void ArrayList::sort(shared<Comparator> c) {
+        shared<Object> *a = new shared<Object>[_size], *work = new shared<Object>[_size];
+
+        for (size_t i = 0; i < _size; i++)
+            work[i] = a[i] = _array[i];
+
+        MergeSortComparator(a, work, _size, c);
+
+        delete[] work;
+
+        std::copy_n(a, _size, _array);
+
+        delete[] a;
+    }
+
+    void ArrayList::MergeSort(shared<Comparable> *a, shared<Comparable> *work, size_t n) {
+        SplitMerge(a, 0, n, work);
+    }
+
+    void ArrayList::SplitMerge(shared<Comparable> *b, size_t iBegin, size_t iEnd, shared<Comparable> *a) {
+        if (iEnd - iBegin <= 1)
+            return;
+
+        size_t iMiddle = (iEnd + iBegin) / 2;
+
+        SplitMerge(a, iBegin, iMiddle, b);
+        SplitMerge(a, iMiddle, iEnd, b);
+
+        Merge(b, iBegin, iMiddle, iEnd, a);
+    }
+
+    void ArrayList::Merge(shared<Comparable> *b, size_t iBegin, size_t iMiddle, size_t iEnd, shared<Comparable> *a) {
+        auto i = iBegin, j = iEnd;
+
+        for (auto k = iBegin; k < iEnd; k++) {
+            if (i < iMiddle && (j >= iEnd || a[i]->compareTo(a[j]) <= 0))
+                b[k] = a[i++];
+            else
+                b[k] = a[j++];
+        }
+    }
+
+    void ArrayList::MergeSortComparator(shared<Object> *a, shared<Object> *work, size_t n,
+        shared<Comparator> comparator) {
+        SplitMergeComparator(a, 0, n, work, comparator);
+    }
+
+    void ArrayList::SplitMergeComparator(shared<Object> *b, size_t iBegin, size_t iEnd, shared<Object> *a,
+    shared<Comparator> comparator) {
+        if (iEnd - iBegin <= 1)
+            return;
+
+        size_t iMiddle = (iEnd + iBegin) / 2;
+
+        SplitMergeComparator(a, iBegin, iMiddle, b, comparator);
+        SplitMergeComparator(a, iMiddle, iEnd, b, comparator);
+
+        MergeComparator(b, iBegin, iMiddle, iEnd, a, comparator);
+    }
+
+    void ArrayList::MergeComparator(shared<Object> *b, size_t iBegin, size_t iMiddle, size_t iEnd, shared<Object> *a,
+    shared<Comparator> comparator) {
+        auto i = iBegin, j = iEnd;
+
+        for (auto k = iBegin; k < iEnd; k++) {
+            if (i < iMiddle && (j >= iEnd || comparator->compare(a[i], a[j]) <= 0))
+                b[k] = a[i++];
+            else
+                b[k] = a[j++];
+        }
     }
 }
