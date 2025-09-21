@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 26)
 
 option(JAVAPP_ENABLE_LEAK_TRACING "Enable leak tracing for the java++ library, including projects built using it." OFF)
 option(JAVAPP_ENABLE_LEAK_STACKTRACE "Enable leak tracing with stacktraces, this is quite expensive, best not to turn it on when not neccesary" OFF)
+option(JAVAPP_ENABLE_INTERNAL_ASSERTIONS "Enable the assertions of internal structures, may cause some performance issues." OFF)
 
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
@@ -22,6 +23,10 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     endif()
 else()
     message("Leak Tracing is enabled, but is not supported on non linux systems (yet)!")
+endif()
+
+if (JAVAPP_ENABLE_INTERNAL_ASSERTIONS)
+    add_compile_definitions(JAVAPP_ENABLE_INTERNAL_ASSERTIONS)
 endif()
 
 add_library(javapp STATIC
