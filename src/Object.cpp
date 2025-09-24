@@ -17,6 +17,8 @@ std::unordered_map<std::thread::id, std::stop_source> _G_stop_sources;
 
 std::unordered_map<std::type_index, internals::typeData> typeMap;
 
+std::unordered_map<std::string, std::shared_ptr<String>> stringMap;
+
 lateinit_stack _G_stack;
 
 lateinit_stack::~lateinit_stack() {
@@ -40,8 +42,7 @@ lateinit_stack::~lateinit_stack() {
 }
 
 void lateinit_stack::die(std::string type) {
-    std::cerr << std::format("[FATAL] [lateinit_stack::die] expecting frame to be downcastable to {}, it was {}", type, typeid(*this_frame->next->frame).name()) << std::endl;
-    std::terminate();
+    panic(std::format("[FATAL] [lateinit_stack::die] expecting frame to be downcastable to {}, it was {}", type, typeid(*this_frame->next->frame).name()));
 }
 
 std::shared_ptr<Object> Object::clone() {
@@ -129,13 +130,10 @@ bool Object::equals(Object *obj) {
 
 internals::deferable Object::synchronize() {
     _monitor_mutex.lock();
-    return std::move(
-        internals::deferable{[this] {
-            // as long as this is still alive when we call it, no way to guarantee that, so uuh
-            // not my problem anymore :pog:
-            this->_monitor_mutex.unlock();
-        }}
-    );
+    return internals::deferable{[=, self=pself] {
+        // guarantee `this` is still alive by holding a shared ptr to self.
+        self->_monitor_mutex.unlock();
+    }};
 }
 
 void panic(const char *msg) {

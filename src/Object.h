@@ -135,6 +135,8 @@ public:
 template <typename T>
 using shared = std::shared_ptr<T>;
 
+using byte = char;
+
 extern lateinit_stack _G_stack;
 
 extern std::unordered_map<std::type_index, internals::typeData> typeMap;
@@ -198,6 +200,8 @@ public:
 
     internals::deferable synchronize();
 };
+
+extern std::unordered_map<std::string, std::shared_ptr<String>> stringMap;
 
 template <typename T, typename... Args>
 shared<T> alloc(Args&&... args) {
