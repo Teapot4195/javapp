@@ -438,7 +438,7 @@ namespace java::util {
     void ArrayList::sort() {
         shared<Comparable> *a = new shared<Comparable>[_size], *work = new shared<Comparable>[_size];
 
-        for (size_t i = 0; i < _size; i++)
+        for (int i = 0; i < _size; i++)
             work[i] = a[i] = std::dynamic_pointer_cast<Comparable>(_array[i]);
 
         MergeSort(a, work, _size);
@@ -453,7 +453,7 @@ namespace java::util {
     void ArrayList::sort(shared<Comparator> c) {
         shared<Object> *a = new shared<Object>[_size], *work = new shared<Object>[_size];
 
-        for (size_t i = 0; i < _size; i++)
+        for (int i = 0; i < _size; i++)
             work[i] = a[i] = _array[i];
 
         MergeSortComparator(a, work, _size, c);
