@@ -199,6 +199,8 @@ add_library(javapp STATIC
         src/Number.h
         src/java/util/function/ObjIntConsumer.cpp
         src/java/util/function/ObjIntConsumer.h
+        src/java/util/OptionalInt.cpp
+        src/java/util/OptionalInt.h
         src/java/util/function/IntSupplier.cpp
         src/java/util/function/IntSupplier.h
 )
