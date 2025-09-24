@@ -197,6 +197,8 @@ add_library(javapp STATIC
         src/Integer.h
         src/Number.cpp
         src/Number.h
+        src/java/util/function/ObjIntConsumer.cpp
+        src/java/util/function/ObjIntConsumer.h
 )
 target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR}/src)
 target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR}/src/impl_inner)
