@@ -198,6 +198,5 @@ add_library(javapp STATIC
         src/Number.cpp
         src/Number.h
 )
-target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR})
 target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR}/src)
 target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR}/src/impl_inner)
