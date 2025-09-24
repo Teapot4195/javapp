@@ -23,7 +23,7 @@ public:
 
     explicit Array(std::vector<T> parent) : length(parent.size()) {
         data = new T[parent.size()];
-        for (int i = 0; i < parent.size(); i++) {
+        for (size_t i = 0; i < parent.size(); i++) {
             data[i] = parent[i];
         }
     }
