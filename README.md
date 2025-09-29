@@ -19,12 +19,15 @@ must absolutely be used, as lateinit has a valid ptr to self now.
 
 ## TODOs:
 
-java.util.function interfaces should be extracted elsewhere somehow
+- java.util.function interfaces should be extracted elsewhere somehow
 
-in String (observed in Enum registration), String's overridden equals hides the
+- in String (observed in Enum registration), String's overridden equals hides the
 templated variant that accepts shared_ptrs from object, investigate how to fix,
 preferably in a user friendly way, `.get()` is kind of ugly.
-- It has been "fixed" if you override the method you can use the
-`DEFINE_SHARED_EQUALS` macro to redefine the templated shared\<\> equals overload.
+  - It has been "fixed" if you override the method you can use the
+  `DEFINE_SHARED_EQUALS` macro to redefine the templated shared\<\> equals overload.
 
-Most of the class implementations are very naive and less than optimal, 
+- Most of the class implementations are very naive and less than optimal,
+
+- java.util.function interfaces that has an identity() member should return a memoized instance to save memory.
+- the best case scenario is one where the alloc\<\> function memoizes strings that are allocated.
