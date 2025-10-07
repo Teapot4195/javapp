@@ -211,6 +211,8 @@ add_library(javapp STATIC
         src/java/util/function/IntToLongFunction.h
         src/java/util/function/IntBinaryOperator.cpp
         src/java/util/function/IntBinaryOperator.h
+        src/java/util/IntSummaryStatistics.cpp
+        src/java/util/IntSummaryStatistics.h
 )
 target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR}/src)
 target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR}/src/impl_inner)
