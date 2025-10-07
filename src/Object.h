@@ -212,11 +212,11 @@ shared<T> alloc(Args&&... args) {
     return shared;
 }
 
-#define DEFINE_SHARED_EQUALS \
-template <class T> \
-requires std::derived_from<T, Object> \
-bool equals(shared<T> obj) { \
-    return this->equals(obj.get()); \
+#define DEFINE_SHARED_EQUALS            \
+template <class T>                      \
+requires std::derived_from<T, Object>   \
+bool equals(shared<T> obj) {            \
+    return this->equals(obj.get());     \
 }
 
 template <typename T>
