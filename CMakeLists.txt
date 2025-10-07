@@ -207,6 +207,8 @@ add_library(javapp STATIC
         src/java/util/function/IntUnaryOperator.h
         src/java/util/function/IntToDoubleFunction.cpp
         src/java/util/function/IntToDoubleFunction.h
+        src/java/util/function/IntToLongFunction.cpp
+        src/java/util/function/IntToLongFunction.h
 )
 target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR}/src)
 target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR}/src/impl_inner)
