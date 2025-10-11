@@ -221,6 +221,8 @@ add_library(javapp STATIC
         src/impl_inner/streams/pipeline/IntPipelineDistinctEntries.h
         src/impl_inner/streams/pipeline/IntPipelineDropWhile.cpp
         src/impl_inner/streams/pipeline/IntPipelineDropWhile.h
+        src/impl_inner/streams/pipeline/IntPipelineFilterEntries.cpp
+        src/impl_inner/streams/pipeline/IntPipelineFilterEntries.h
 )
 target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR}/src)
 target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR}/src/impl_inner)
