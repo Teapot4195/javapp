@@ -8,6 +8,9 @@ namespace streams::pipeline {
         : AbstractPipeline(parent), _predicate(predicate) {}
 
     bool PipelineFilterEntries::hasNext() {
+        if (_next.has_value())
+            return true;
+
         while (_before->hasNext()) {
             auto next = _before->next();
             if (!_predicate->test(next))
