@@ -217,6 +217,8 @@ add_library(javapp STATIC
         src/impl_inner/streams/pipeline/AbstractIntPipeline.h
         src/impl_inner/streams/pipeline/IntPipelineBoxer.cpp
         src/impl_inner/streams/pipeline/IntPipelineBoxer.h
+        src/impl_inner/streams/pipeline/IntPipelineDropWhile.cpp
+        src/impl_inner/streams/pipeline/IntPipelineDropWhile.h
 )
 target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR}/src)
 target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR}/src/impl_inner)
