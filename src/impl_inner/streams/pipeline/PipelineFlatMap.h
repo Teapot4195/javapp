@@ -2,16 +2,16 @@
 
 #include <streams/pipeline/AbstractPipeline.h>
 
-namespace java::util::function {
-    class Function;
+namespace java::util::stream {
+    class Stream;
 }
 
 namespace streams::pipeline {
     class PipelineFlatMap : public virtual Object, public virtual AbstractPipeline {
         shared<java::util::function::Function> mapper;
-        shared<java::util::Spliterator> splitr;
+        shared<java::util::stream::Stream> stream;
+        shared<Iterator> iterator_;
         std::optional<shared<Object>> _next;
-        shared<java::util::function::Consumer> _cons;
 
     public:
         PipelineFlatMap(const shared<AbstractPipeline> &before, const shared<java::util::function::Function> &mapper);

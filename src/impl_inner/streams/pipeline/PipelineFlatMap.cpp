@@ -24,19 +24,19 @@ namespace streams::pipeline {
     }
 
     bool PipelineFlatMap::fillNextBuffer() {
-        if (!_cons)
-            _cons = alloc<java::util::function::Consumer>([&, self=wself](const shared<Object>& obj) {
-                self.lock()->_next = alloc<java::util::Optional>(obj);
-            });
-
         if (!_before->hasNext())
             return false;
         while (_before->hasNext()) {
-            if (!splitr)
-                splitr = std::dynamic_pointer_cast<java::util::stream::Stream>(mapper->apply(_before->next()))->spliterator();
-            if (splitr->tryAdvance(_cons))
+            if (!stream) {
+                stream = std::dynamic_pointer_cast<java::util::stream::Stream>(mapper->apply(_before->next()));
+                iterator_ = stream->iterator();
+            }
+
+            if (iterator_->hasNext())
                 return true;
-            splitr = nullptr;
+
+            stream->close();
+            stream = nullptr;
         }
         return false;
     }
