@@ -217,6 +217,8 @@ add_library(javapp STATIC
         src/impl_inner/streams/pipeline/AbstractIntPipeline.h
         src/impl_inner/streams/pipeline/IntPipelineBoxer.cpp
         src/impl_inner/streams/pipeline/IntPipelineBoxer.h
+        src/impl_inner/streams/pipeline/IntPipelineDistinctEntries.cpp
+        src/impl_inner/streams/pipeline/IntPipelineDistinctEntries.h
         src/impl_inner/streams/pipeline/IntPipelineDropWhile.cpp
         src/impl_inner/streams/pipeline/IntPipelineDropWhile.h
 )
