@@ -52,7 +52,7 @@ public:
         bool tombstone : 1;
         uint8_t hash_low : 6;
     };
-#pragma pack (pop, 1)
+#pragma pack (pop)
 
     size_t bucket_count{};
     size_t tombstone_count{};

@@ -35,7 +35,7 @@ public:
      */
     void rebuild_table();
 
-#pragma pack(1)
+#pragma pack (push, 1)
     struct swisstable {
         shared<Object> key;
         shared<Object> data;
@@ -46,7 +46,7 @@ public:
         bool tombstone : 1;
         uint8_t hash_low : 6;
     };
-#pragma pop(1)
+#pragma pack (pop)
 
     size_t bucket_count{};
     size_t tombstone_count{};
