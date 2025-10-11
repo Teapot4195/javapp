@@ -1,5 +1,7 @@
 #include "IntSummaryStatistics.h"
 
+#include <String.h>
+
 namespace java::util {
     IntSummaryStatistics::IntSummaryStatistics(long long count, int min, int max, long long sum)
         : count(count), sum(sum), min(min), max(max) {}
