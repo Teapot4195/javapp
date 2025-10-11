@@ -225,6 +225,8 @@ add_library(javapp STATIC
         src/impl_inner/streams/pipeline/IntPipelineFilterEntries.h
         src/impl_inner/streams/pipeline/IntPipelineMapToObj.cpp
         src/impl_inner/streams/pipeline/IntPipelineMapToObj.h
+        src/impl_inner/streams/pipeline/IntPipelinePeek.cpp
+        src/impl_inner/streams/pipeline/IntPipelinePeek.h
 )
 target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR}/src)
 target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR}/src/impl_inner)
