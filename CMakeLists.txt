@@ -31,7 +31,9 @@ endif()
 
 add_compile_options(-Wall)
 
-add_library(javapp STATIC
+option(BUILD_PACKAGE OFF)
+add_subdirectory(lib/rttr)
+
 add_library(libbase STATIC
         src/Object.cpp
         src/Object.h
@@ -234,6 +236,7 @@ add_library(libbase STATIC
 target_include_directories(libbase PUBLIC ${CMAKE_SOURCE_DIR}/src)
 target_include_directories(libbase PRIVATE ${CMAKE_SOURCE_DIR}/src/impl_inner)
 target_link_libraries(libbase PRIVATE stdc++exp)
+target_link_libraries(libbase PUBLIC RTTR::Core)
 
 add_executable(test
         tests/test.cpp

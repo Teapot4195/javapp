@@ -1,0 +1,3 @@
+[submodule "lib/rttr"]
+	path = lib/rttr
+	url = git@github.com:rttrorg/rttr.git
