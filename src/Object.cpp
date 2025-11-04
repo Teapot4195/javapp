@@ -9,6 +9,7 @@
 #include <execinfo.h>
 #include <cxxabi.h>
 #include <csignal>
+#include <sys/mman.h>
 
 #include "String.h"
 
@@ -136,6 +137,9 @@ internals::deferable Object::synchronize() {
     }};
 }
 
+// TODO: note that this is rather cursed and might not quite work
+// The issue here is that fprintf is technically not signal safe, although it should reasonably be safe as we control
+// the other printf users and shouldn't get stuck in this case.
 void panic(const char *msg) {
     fprintf(stderr, "java++ panicked due to an irrecoverable state (%s)!\n", msg);
     fprintf(stderr, "Call stack (most recent call first):\n");
@@ -168,6 +172,10 @@ void panic(const char *msg) {
         fprintf(stderr, " - [%d] %p: %s\n", i, bt[i], demangled ? demangled : backtrace[i]);
         free(demangled);
     }
+
+    if (count == 500)
+        fprintf(stderr, "NOTE: backtrace buffer (500 limit) was filled!");
+
     free(backtrace);
     free(bt);
 
@@ -178,20 +186,67 @@ void panic(const std::string &msg) {
     panic(msg.data());
 }
 
+void get_stack_bounds(void **stack_base, size_t *stack_size) {
+    pthread_attr_t attr;
+    pthread_getattr_np(pthread_self(), &attr);  // non-portable GNU extension
+
+    void *base;
+    size_t size;
+    pthread_attr_getstack(&attr, &base, &size);
+    pthread_attr_destroy(&attr);
+
+    *stack_base = base;
+    *stack_size = size;
+}
+
+void segfault_handler(int sig, siginfo_t* si, void* ucontext) {
+    char buffer[1024];
+    auto fault_addr = reinterpret_cast<unsigned long long>(si->si_addr);
+    if (si->si_code == SEGV_MAPERR) {
+        if (fault_addr < 0x1000)
+            sprintf(buffer, "Attempted to dereference a NULL pointer at 0x%p", si->si_addr);
+        else {
+            void *base;
+            size_t size;
+            get_stack_bounds(&base, &size);
+            auto base_addr = reinterpret_cast<unsigned long long>(base);
+            if (si->si_addr > base ? (fault_addr - base_addr) < 0x1000 : (base_addr - fault_addr) < 0x1000) {
+                auto c = sprintf(buffer, "Stack overflow/underflow at 0x%p\n!", si->si_addr);
+                write(STDERR_FILENO, buffer, c);
+                buffer[0] = '\0';
+            }
+        }
+    }
+    panic(buffer);
+}
+
 int main(int argc, char **argv) {
-    auto handler = [](int sig, siginfo_t* si, void* _) {
-        char buffer[1024];
-        sprintf(buffer, "Attempted to dereference a NULL pointer at 0x%p\n", si->si_addr);
-        panic(buffer);
-    };
+
+    // allocate alt stack
+    size_t alt_size = SIGSTKSZ * 4;
+    void *alt = mmap(nullptr, alt_size, PROT_READ | PROT_WRITE,
+                     MAP_PRIVATE | MAP_ANONYMOUS | MAP_STACK, -1, 0);
+    if (alt == MAP_FAILED) {
+        perror("mmap(altstack)");
+        return -1;
+    }
+
+    stack_t ss;
+    ss.ss_sp = alt;
+    ss.ss_size = alt_size;
+    ss.ss_flags = 0;
+    if (sigaltstack(&ss, nullptr) != 0) {
+        perror("sigaltstack");
+        return -1;
+    }
 
     struct sigaction sa{};
 
-    sa.sa_flags = SA_SIGINFO;
+    sa.sa_flags = SA_SIGINFO | SA_ONSTACK;
     sigemptyset(&sa.sa_mask);
-    sa.sa_sigaction = handler;
+    sa.sa_sigaction = segfault_handler;
     if (sigaction(SIGSEGV, &sa, nullptr) == -1)
-        fprintf(stderr, "WARN: unable to register SIGSEGV handler! There will be no exception on crash!");
+        fprintf(stderr, "WARN: unable to register SIGSEGV handler! There will be no exception or backtrace on segfault!");
 
     return jmain(argc, argv);
 }
