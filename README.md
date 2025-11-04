@@ -1,6 +1,6 @@
 # Java++
 
-Welcome to libbase, `java.base` but in c++! (you should not question how this came
+Welcome to java++, the java api but in c++! (you should not question how this came
 to be)
 
 As complete as possible java 19 Lang API, provided in C++. 
@@ -30,4 +30,7 @@ preferably in a user friendly way, `.get()` is kind of ugly.
 - Most of the class implementations are very naive and less than optimal,
 
 - java.util.function interfaces that has an identity() member should return a memoized instance to save memory.
-- the best case scenario is one where the alloc\<\> function memoizes strings that are allocated.
+  - the best case scenario is one where the alloc\<\> function memoizes strings that are allocated.
+
+- internal implementation of streams can do with common code extraction (e.g. templating)
+- internal implementation of streams do not currently support parallel execution
