@@ -32,6 +32,7 @@ endif()
 add_compile_options(-Wall)
 
 add_library(javapp STATIC
+add_library(libbase STATIC
         src/Object.cpp
         src/Object.h
         src/jlang.h
@@ -228,5 +229,13 @@ add_library(javapp STATIC
         src/impl_inner/streams/pipeline/IntPipelinePeek.cpp
         src/impl_inner/streams/pipeline/IntPipelinePeek.h
 )
-target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR}/src)
-target_include_directories(javapp PUBLIC ${CMAKE_SOURCE_DIR}/src/impl_inner)
+target_include_directories(libbase PUBLIC ${CMAKE_SOURCE_DIR}/src)
+target_include_directories(libbase PRIVATE ${CMAKE_SOURCE_DIR}/src/impl_inner)
+target_link_libraries(libbase PRIVATE stdc++exp)
+
+add_executable(test
+        tests/test.cpp
+        tests/infra.h
+        tests/infra.cpp
+)
+target_link_libraries(test PUBLIC libbase)
