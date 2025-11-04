@@ -228,6 +228,8 @@ add_library(libbase STATIC
         src/impl_inner/streams/pipeline/IntPipelineMapToObj.h
         src/impl_inner/streams/pipeline/IntPipelinePeek.cpp
         src/impl_inner/streams/pipeline/IntPipelinePeek.h
+        src/impl_inner/AllocTrace.cpp
+        src/impl_inner/AllocTrace.h
 )
 target_include_directories(libbase PUBLIC ${CMAKE_SOURCE_DIR}/src)
 target_include_directories(libbase PRIVATE ${CMAKE_SOURCE_DIR}/src/impl_inner)
