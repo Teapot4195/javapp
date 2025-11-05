@@ -137,6 +137,10 @@ internals::deferable Object::synchronize() {
     }};
 }
 
+bool Object::equals_overload_resolve(Object *obj) {
+    return this->equals(obj);
+}
+
 // TODO: note that this is rather cursed and might not quite work
 // The issue here is that fprintf is technically not signal safe, although it should reasonably be safe as we control
 // the other printf users and shouldn't get stuck in this case.
@@ -220,8 +224,9 @@ void segfault_handler(int sig, siginfo_t* si, void* ucontext) {
     panic(buffer);
 }
 
-int main(int argc, char **argv) {
+extern bool alloc_trace_initd;
 
+int main(int argc, char **argv) {
     // allocate alt stack
     size_t alt_size = SIGSTKSZ * 4;
     void *alt = mmap(nullptr, alt_size, PROT_READ | PROT_WRITE,
@@ -248,5 +253,24 @@ int main(int argc, char **argv) {
     if (sigaction(SIGSEGV, &sa, nullptr) == -1)
         fprintf(stderr, "WARN: unable to register SIGSEGV handler! There will be no exception or backtrace on segfault!");
 
+    alloc_trace_initd = true; // we are ready to leak trace the user program.
+
     return jmain(argc, argv);
+}
+
+#include <rttr/registration>
+
+RTTR_REGISTRATION
+{
+    rttr::registration::class_<Object>("java.lang.Object")
+        .constructor<>()
+        .method("notify", &Object::notify)
+        .method("notifyAll", &Object::notifyAll)
+        .method("wait", rttr::select_overload<void(void)>(&Object::wait))
+        .method("wait", rttr::select_overload<void(long long)>(&Object::wait))
+        .method("wait", rttr::select_overload<void(long long, int)>(&Object::wait))
+        .method("hashCode", &Object::hashCode)
+        .method("toString", &Object::toString)
+        .method("equals", &Object::equals_overload_resolve)
+    ;
 }

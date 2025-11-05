@@ -199,6 +199,8 @@ public:
     }
 
     internals::deferable synchronize();
+
+    bool equals_overload_resolve(Object* obj);
 };
 
 extern std::unordered_map<std::string, std::shared_ptr<String>> stringMap;

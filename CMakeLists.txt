@@ -234,8 +234,9 @@ add_library(libbase STATIC
         src/impl_inner/AllocTrace.h
 )
 target_include_directories(libbase PUBLIC ${CMAKE_SOURCE_DIR}/src)
-target_include_directories(libbase PRIVATE ${CMAKE_SOURCE_DIR}/src/impl_inner)
-target_link_libraries(libbase PRIVATE stdc++exp)
+target_include_directories(libbase PUBLIC ${CMAKE_SOURCE_DIR}/src/impl_inner)
+target_include_directories(libbase PUBLIC ${CMAKE_SOURCE_DIR}/lib/gc)
+target_link_libraries(libbase PUBLIC stdc++exp)
 target_link_libraries(libbase PUBLIC RTTR::Core)
 
 add_executable(test
