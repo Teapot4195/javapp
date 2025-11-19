@@ -24,7 +24,7 @@ namespace java::util {
 
         void clear() override;
 
-        std::shared_ptr<Object> clone() override;
+        shared<Object> clone() override;
 
         bool contains(shared<Object> o) override;
 

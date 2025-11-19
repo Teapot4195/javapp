@@ -2,6 +2,8 @@
 
 #include "ListIterator.h"
 
+#include "function/IntFunction.h"
+
 namespace java::util {
     void AbstractList::add(int index, shared<Object> element) {
         throw std::runtime_error("THROW UNSUPPORTEDOPERATIONEXCEPTION");
@@ -117,7 +119,7 @@ namespace java::util {
     };
 
     shared<Iterator> AbstractList::iterator() {
-        return alloc<AbstractList_Iterator_Specialization>(std::dynamic_pointer_cast<AbstractList>(shared_from_this()));
+        return alloc<AbstractList_Iterator_Specialization>(pself);
     }
 
     int AbstractList::lastIndexOf(const shared<Object> o) {
@@ -183,7 +185,7 @@ namespace java::util {
     shared<ListIterator> AbstractList::listIterator(int index) {
         if (index < 0 || index >= size())
             throw std::runtime_error("THROW CONCURRENTMODIFICATIONEXCEPTION");
-        return alloc<AbstractList_ListIterator_Specialization>(std::dynamic_pointer_cast<AbstractList>(shared_from_this()), index);
+        return alloc<AbstractList_ListIterator_Specialization>(pself, index);
     }
 
     shared<Object> AbstractList::remove(int index) {
@@ -387,7 +389,7 @@ namespace java::util {
         }
 
         shared<ListIterator> listIterator(const int index) override {
-            return alloc<AbstractList_ListIterator_Specialization>(std::dynamic_pointer_cast<AbstractList>(shared_from_this()), 0);
+            return alloc<AbstractList_ListIterator_Specialization>(pself, 0);
         }
 
         shared<List> subList(const int fromIndex, const int toIndex) override {
@@ -396,7 +398,7 @@ namespace java::util {
     };
 
     shared<List> AbstractList::subList(int fromIndex, const int toIndex) {
-        return alloc<AbstractList_SubList_Specialization>(std::dynamic_pointer_cast<AbstractList>(shared_from_this()), fromIndex, toIndex - fromIndex);
+        return alloc<AbstractList_SubList_Specialization>(pself, fromIndex, toIndex - fromIndex);
     }
 
     shared<Array<>> AbstractList::toArray() {

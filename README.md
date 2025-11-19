@@ -27,10 +27,18 @@ preferably in a user friendly way, `.get()` is kind of ugly.
   - It has been "fixed" if you override the method you can use the
   `DEFINE_SHARED_EQUALS` macro to redefine the templated shared\<\> equals overload.
 
-- Most of the class implementations are very naive and less than optimal,
+- Most of the class implementations are very naive and less than optimal, fix that
 
 - java.util.function interfaces that has an identity() member should return a memoized instance to save memory.
+
+- String allocations are also not memoized.
   - the best case scenario is one where the alloc\<\> function memoizes strings that are allocated.
 
 - internal implementation of streams can do with common code extraction (e.g. templating)
 - internal implementation of streams do not currently support parallel execution
+
+- the garbage collector *usually*:tm: works, but not always, fix that
+  - Incidentally, the garbage collector also might wait up to 100ms, that is umm, not good
+
+- AllocTrace is a meme with alloc sync across **ALL** threads
+  - Let's figure out a way to not do that.

@@ -109,19 +109,19 @@ namespace java::util {
         if (a == nullptr)
             throw std::runtime_error("THROW NULLPOINTEREXCEPTION");
 
-        if (a->length < s) {
+        if (a->get_length() < s) {
             a->resize(s);
         }
 
         int index = 0;
 
         while (it->hasNext()) {
-            a->data[index++] = it->next();
+            a->get_data()[index++] = it->next();
         }
 
-        if (index < a->length) {
-            for (int i = index; i < a->length; i++) {
-                a->data[i] = nullptr;
+        if (index < a->get_length()) {
+            for (int i = index; i < a->get_length(); i++) {
+                a->get_data()[i] = nullptr;
             }
         }
 

@@ -23,11 +23,11 @@ UnmodifiableMap::UnmodifiableMap(const shared<Map> &map) {
 }
 
 shared<UnmodifiableMap> UnmodifiableMap::copyOf(const shared<Map>& map) {
-    return std::make_shared<UnmodifiableMap>(map);
+    return alloc<UnmodifiableMap>(map);
 }
 
-std::shared_ptr<Object> UnmodifiableMap::clone() {
-    return shared_from_this();
+shared<Object> UnmodifiableMap::clone() {
+    return from_self<Object>();
 }
 
 void UnmodifiableMap::lateinit() {

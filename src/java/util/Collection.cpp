@@ -70,7 +70,7 @@ namespace java::util {
     shared<Spliterator> Collection::spliterator() {
         if (this->size() == 0)
             return Spliterators::emptySpliterator();
-        return alloc<Spliterator_Collection_Specialization>(std::dynamic_pointer_cast<Collection>(shared_from_this()));
+        return alloc<Spliterator_Collection_Specialization>(from_self<Collection>());
     }
 
     shared<stream::Stream> Collection::stream() {
@@ -78,6 +78,6 @@ namespace java::util {
     }
 
     shared<Array<>> Collection::toArray(const shared<function::IntFunction> generator) {
-        return toArray(std::dynamic_pointer_cast<Array<>>(generator->apply(this->size())));
+        return toArray(dynamic_pointer_cast<Array<>>(generator->apply(this->size())));
     }
 }

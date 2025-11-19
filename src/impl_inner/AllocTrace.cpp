@@ -3,14 +3,21 @@
 #include <cstring>
 
 #include <execinfo.h>
+#include <garbage_collection.h>
 
 #define BTBUFFER_MAX 500
 
 std::mutex allocMapMutex;
 std::unordered_map<void*, AllocInfo, std::hash<void*>, std::equal_to<>, Mallocator<std::pair<void* const, AllocInfo>>> allocMap;
 
+std::atomic_size_t memAllocSum;
+std::atomic_size_t sinceLastGC;
+
+bool alloc_trace_initd = false;
+
 extern void** buffer;
 
+#ifdef JAVAPP_TRACE_ALLOCS_STACKTRACE
 __always_inline void** backtrace_buffer(size_t* bufsize) {
     if (buffer == nullptr)
         buffer = static_cast<void **>(malloc(BTBUFFER_MAX * sizeof(void*)));
@@ -22,6 +29,7 @@ __always_inline void** backtrace_buffer(size_t* bufsize) {
     memcpy(result_buffer, buffer, count * sizeof(void*));
     return result_buffer;
 }
+#endif
 
 __always_inline void leakDetectRegister(void* alloc_location, std::size_t count, std::align_val_t alignment) {
 #ifdef JAVAPP_TRACE_ALLOCS
@@ -38,9 +46,17 @@ __always_inline void leakDetectRegister(void* alloc_location, std::size_t count,
 }
 
 void* operator new(std::size_t count) {
+#ifdef JAVAPP_ENABLE_GC
+    void* ptr = gcmalloc(count);
+#else
     void* ptr = malloc(count);
+#endif
     if (ptr == nullptr)
         throw std::bad_alloc();
+
+    if (!alloc_trace_initd) {
+        return ptr;
+    }
 
     leakDetectRegister(ptr, count, static_cast<std::align_val_t>(__STDCPP_DEFAULT_NEW_ALIGNMENT__));
 
@@ -48,9 +64,17 @@ void* operator new(std::size_t count) {
 }
 
 void* operator new(std::size_t count, std::align_val_t alignment) {
+#ifdef JAVAPP_ENABLE_GC
+    void* ptr = gcmalloc(count);
+#else
     void* ptr = malloc(count);
+#endif
     if (ptr == nullptr)
         throw std::bad_alloc();
+
+    if (!alloc_trace_initd) {
+        return ptr;
+    }
 
     leakDetectRegister(ptr, count, alignment);
 
@@ -58,9 +82,17 @@ void* operator new(std::size_t count, std::align_val_t alignment) {
 }
 
 void* operator new[](std::size_t count) {
+#ifdef JAVAPP_ENABLE_GC
+    void* ptr = gcamalloc(1, count);
+#else
     void* ptr = malloc(count);
+#endif
     if (ptr == nullptr)
         throw std::bad_alloc();
+
+    if (!alloc_trace_initd) {
+        return ptr;
+    }
 
     leakDetectRegister(ptr, count, static_cast<std::align_val_t>(__STDCPP_DEFAULT_NEW_ALIGNMENT__));
 
@@ -68,47 +100,111 @@ void* operator new[](std::size_t count) {
 }
 
 void* operator new[](std::size_t count, std::align_val_t alignment) {
+#ifdef JAVAPP_ENABLE_GC
+    void* ptr = gcamalloc(1, count);
+#else
     void* ptr = malloc(count);
+#endif
     if (ptr == nullptr)
         throw std::bad_alloc();
+
+    if (!alloc_trace_initd) {
+        return ptr;
+    }
 
     leakDetectRegister(ptr, count, alignment);
 
     return ptr;
 }
 
+static void free_memory(void* ptr) noexcept {
+#ifdef JAVAPP_ENABLE_GC
+    gcfree(ptr);
+#else
+    free(ptr);
+#endif
+}
+
 void operator delete(void* ptr) noexcept {
+    if (!alloc_trace_initd) {
+        free_memory(ptr);
+        return;
+    }
+
     if (ptr != nullptr) {
         allocMapMutex.lock();
+        if (!allocMap.contains(ptr)) {
+            free_memory(ptr);
+            allocMapMutex.unlock();
+            return;
+        }
+        auto sz = allocMap[ptr].size;
+        memAllocSum -= sz;
         allocMap.erase(ptr);
         allocMapMutex.unlock();
     }
-    free(ptr);
+    free_memory(ptr);
 }
 
 void operator delete(void* ptr, std::size_t _) noexcept {
+    if (!alloc_trace_initd) {
+        free_memory(ptr);
+        return;
+    }
+
     if (ptr != nullptr) {
         allocMapMutex.lock();
+        if (!allocMap.contains(ptr)) {
+            free_memory(ptr);
+            allocMapMutex.unlock();
+            return;
+        }
+        auto sz = allocMap[ptr].size;
+        memAllocSum -= sz;
         allocMap.erase(ptr);
         allocMapMutex.unlock();
     }
-    free(ptr);
+    free_memory(ptr);
 }
 
 void operator delete[](void* ptr) noexcept {
+    if (!alloc_trace_initd) {
+        free_memory(ptr);
+        return;
+    }
+
     if (ptr != nullptr) {
         allocMapMutex.lock();
+        if (!allocMap.contains(ptr)) {
+            free_memory(ptr);
+            allocMapMutex.unlock();
+            return;
+        }
+        auto sz = allocMap[ptr].size;
+        memAllocSum -= sz;
         allocMap.erase(ptr);
         allocMapMutex.unlock();
     }
-    free(ptr);
+    free_memory(ptr);
 }
 
 void operator delete[](void* ptr, std::size_t _) noexcept {
+    if (!alloc_trace_initd) {
+        free_memory(ptr);
+        return;
+    }
+
     if (ptr != nullptr) {
         allocMapMutex.lock();
+        if (!allocMap.contains(ptr)) {
+            free_memory(ptr);
+            allocMapMutex.unlock();
+            return;
+        }
+        auto sz = allocMap[ptr].size;
+        memAllocSum -= sz;
         allocMap.erase(ptr);
         allocMapMutex.unlock();
     }
-    free(ptr);
+    free_memory(ptr);
 }

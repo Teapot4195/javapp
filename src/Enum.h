@@ -11,7 +11,7 @@ class Enum : public virtual Object, public virtual Comparable, public virtual ja
     std::type_index get_type_index_checked();
 
 protected:
-    std::shared_ptr<Object> clone() final;
+    shared<Object> clone() final;
 
 public:
     ~Enum() override = default;

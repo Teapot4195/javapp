@@ -1,37 +1,13 @@
 #pragma once
 
+#include <atomic>
 #include <cstdlib>
+#include <Mallocator.h>
 #include <mutex>
+#include <typeindex>
 #include <unordered_map>
 
-template<class T>
-struct Mallocator
-{
-    typedef T value_type;
-
-    Mallocator() = default;
-
-    template<class U>
-    constexpr explicit Mallocator(const Mallocator <U>&) noexcept {}
-
-    [[nodiscard]] T* allocate(const std::size_t n)
-    {
-        if (n > std::numeric_limits<std::size_t>::max() / sizeof(T))
-            throw std::bad_array_new_length();
-
-        if (auto p = static_cast<T*>(malloc(n * sizeof(T))))
-        {
-            return p;
-        }
-
-        throw std::bad_alloc();
-    }
-
-    void deallocate(T* p, const std::size_t _) noexcept
-    {
-        free(p);
-    }
-};
+class Object;
 
 struct AllocInfo {
     size_t size;
@@ -45,6 +21,28 @@ struct AllocInfo {
     }
 #endif
 };
+
+// void insert_sliplist_allocation(Object* address, std::type_index index);
+//
+// void remove_sliplist_allocation(Object* address);
+
+#ifdef JAVAPP_ENABLE_GC
+void* gcmalloc(std::size_t count);
+
+// malloc a GC managed array.
+void* gcamalloc(std::size_t elem_size, std::size_t count);
+
+void gcfree(void* ptr);
+
+void gcsetbase(void* base, void* objectbase);
+
+void gcinit();
+
+void gcshutdown();
+#endif
+
+extern std::atomic_size_t memAllocSum;
+extern std::atomic_size_t sinceLastGC;
 
 extern std::mutex allocMapMutex;
 extern std::unordered_map<void*, AllocInfo, std::hash<void*>, std::equal_to<>, Mallocator<std::pair<void* const, AllocInfo>>> allocMap;

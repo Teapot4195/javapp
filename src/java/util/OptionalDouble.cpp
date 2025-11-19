@@ -83,7 +83,7 @@ namespace java::util {
     double OptionalDouble::orElseThrow(const shared<function::Supplier> &exceptionSupplier) const {
         if (hasValue)
             return value;
-        throw std::dynamic_pointer_cast<Throwable>(exceptionSupplier->get());
+        throw dynamic_pointer_cast<Throwable>(exceptionSupplier->get());
     }
 
     shared<stream::DoubleStream> OptionalDouble::stream() {

@@ -5,6 +5,7 @@
 #include <java/util/Comparator.h>
 #include <java/util/function/BiConsumer.h>
 #include <java/util/function/Function.h>
+#include <java/util/function/IntFunction.h>
 #include <java/util/function/Predicate.h>
 #include <java/util/function/Supplier.h>
 #include <java/util/Optional.h>

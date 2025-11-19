@@ -1,5 +1,6 @@
 #include "Object.h"
 
+#include <Array.h>
 #include <cstring>
 #include <format>
 #include <iostream>
@@ -9,12 +10,29 @@
 #include <execinfo.h>
 #include <cxxabi.h>
 #include <csignal>
+#include <garbage_collection.h>
 #include <sys/mman.h>
 
 #include "String.h"
 
 std::unordered_map<std::thread::id, std::stop_token> _G_stop_tokens;
 std::unordered_map<std::thread::id, std::stop_source> _G_stop_sources;
+std::unordered_map<std::thread::id, thread_information> _G_stop_information;
+
+std::mutex _gc_mutex;
+std::size_t _G_thread_count = 1; ///< thread count is also protected using _gc_mutex.
+std::size_t _gc_at_barrier;
+std::condition_variable _gc_cond;
+std::condition_variable _gc_ok;
+std::condition_variable _gc_stop;
+bool _gc_done = true;
+
+thread_local std::stop_token _thread_stop;
+
+std::stop_source _program_stop;
+std::stop_token _program_stop_token;
+
+std::vector<std::thread> _G_threads;
 
 std::unordered_map<std::type_index, internals::typeData> typeMap;
 
@@ -46,29 +64,44 @@ void lateinit_stack::die(std::string type) {
     panic(std::format("[FATAL] [lateinit_stack::die] expecting frame to be downcastable to {}, it was {}", type, typeid(*this_frame->next->frame).name()));
 }
 
-std::shared_ptr<Object> Object::clone() {
+std::mutex optional_monitor_container::mtx;
+
+optional_monitor_container::~optional_monitor_container() {
+    if (!m)
+        delete m;
+}
+
+monitor * optional_monitor_container::get() {
+    // TODO: allocations can't take very long, we can just busy wait on an atomic bool (remember to avoid deadlock by calling gcmaybe()!.
+    std::unique_lock _lock(mtx);
+    if (!m)
+        m = new monitor;
+    return m;
+}
+
+shared<Object> Object::clone() {
     throw std::runtime_error("clone not implemented");
 }
 
 void Object::lateinit() {}
 
 void Object::notify() {
-    _monitor_cond.notify_one();
+    monitor.get()->_monitor_cond.notify_one();
 }
 
 void Object::notifyAll() {
-    _monitor_cond.notify_all();
+    monitor.get()->_monitor_cond.notify_all();
 }
 
 void Object::wait() {
     using namespace std::chrono_literals;
 
-    std::unique_lock _lock(_monitor_mutex);
+    std::unique_lock _lock(monitor.get()->_monitor_mutex);
 
     const auto& token = _G_stop_tokens[std::this_thread::get_id()];
 
     while (true) {
-        if (const auto result = _monitor_cond.wait_for(_lock, 5ms); result == std::cv_status::timeout) {
+        if (const auto result = monitor.get()->_monitor_cond.wait_for(_lock, 5ms); result == std::cv_status::timeout) {
             // check for stop requested, then continue
             if (token.stop_requested())
                 throw std::runtime_error("Thread stop requested");
@@ -88,12 +121,12 @@ void Object::wait(const long long timeoutMillis, const int nanos) {
 
     const auto until = std::chrono::system_clock::now() + std::chrono::milliseconds(timeoutMillis) + std::chrono::nanoseconds(nanos);
 
-    std::unique_lock _lock(_monitor_mutex);
+    std::unique_lock _lock(monitor.get()->_monitor_mutex);
 
     const auto& token = _G_stop_tokens[std::this_thread::get_id()];
 
     while (true) {
-        if (const auto result = _monitor_cond.wait_for(_lock, 5ms); result == std::cv_status::timeout) {
+        if (const auto result = monitor.get()->_monitor_cond.wait_for(_lock, 5ms); result == std::cv_status::timeout) {
             // check for stop requested, then continue
             if (token.stop_requested())
                 throw std::runtime_error("Thread stop requested");
@@ -130,15 +163,19 @@ bool Object::equals(Object *obj) {
 }
 
 internals::deferable Object::synchronize() {
-    _monitor_mutex.lock();
+    monitor.get()->_monitor_mutex.lock();
     return internals::deferable{[=, self=pself] {
         // guarantee `this` is still alive by holding a shared ptr to self.
-        self->_monitor_mutex.unlock();
+        self->monitor.get()->_monitor_mutex.unlock();
     }};
 }
 
 bool Object::equals_overload_resolve(Object *obj) {
     return this->equals(obj);
+}
+
+void check_gc() {
+    javapp::garbage_collection::gc_maybe();
 }
 
 // TODO: note that this is rather cursed and might not quite work
@@ -253,9 +290,54 @@ int main(int argc, char **argv) {
     if (sigaction(SIGSEGV, &sa, nullptr) == -1)
         fprintf(stderr, "WARN: unable to register SIGSEGV handler! There will be no exception or backtrace on segfault!");
 
+    javapp::garbage_collection collector;
+
+    std::thread collector_thread([&]() {
+#if defined(__unix) || defined(__unix__)
+        pthread_setname_np(pthread_self(), "javapp GC");
+#endif
+
+        collector.worker();
+    });
+
+#ifdef JAVAPP_ENABLE_GC
+    // set up the gc memory region as early as reasonable
+    gcinit();
+#endif
+
+    _program_stop = std::stop_source();
+    _program_stop_token = _program_stop.get_token();
+
+    // setup this threads stop token
+    std::thread::id tid = std::this_thread::get_id();
+    auto& source = _G_stop_sources[tid] = std::stop_source{};
+    auto& src = _G_stop_tokens[tid] = source.get_token();
+    _thread_stop = src;
+
+    // register types
+    Object::registerType<Object>(); // register root object type metadata.
+
     alloc_trace_initd = true; // we are ready to leak trace the user program.
 
-    return jmain(argc, argv);
+    std::atexit([]() {
+        (void)_program_stop.request_stop();
+    });
+
+    auto rcode = jmain(argc, argv);
+
+    (void)_program_stop.request_stop();
+
+    collector_thread.join();
+
+    for (auto& thread : _G_threads)
+        thread.join();
+
+#ifdef JAVAPP_ENABLE_GC
+    // TODO: clean up the GC memory regions
+    gcshutdown();
+#endif
+
+    return rcode;
 }
 
 #include <rttr/registration>
@@ -266,11 +348,15 @@ RTTR_REGISTRATION
         .constructor<>()
         .method("notify", &Object::notify)
         .method("notifyAll", &Object::notifyAll)
-        .method("wait", rttr::select_overload<void(void)>(&Object::wait))
+        .method("wait", rttr::select_overload<void()>(&Object::wait))
         .method("wait", rttr::select_overload<void(long long)>(&Object::wait))
         .method("wait", rttr::select_overload<void(long long, int)>(&Object::wait))
         .method("hashCode", &Object::hashCode)
         .method("toString", &Object::toString)
-        .method("equals", &Object::equals_overload_resolve)
-    ;
+        .method("equals", &Object::equals_overload_resolve);
+
+    rttr::registration::class_<TypeErasedArray>("javapp.runtime.TypeErasedArray")
+        .constructor<>()
+        .property("length", &TypeErasedArray::length)
+        .property("data", &TypeErasedArray::data);
 }

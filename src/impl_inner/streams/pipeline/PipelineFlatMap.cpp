@@ -28,7 +28,7 @@ namespace streams::pipeline {
             return false;
         while (_before->hasNext()) {
             if (!stream) {
-                stream = std::dynamic_pointer_cast<java::util::stream::Stream>(mapper->apply(_before->next()));
+                stream = dynamic_pointer_cast<java::util::stream::Stream>(mapper->apply(_before->next()));
                 iterator_ = stream->iterator();
             }
 

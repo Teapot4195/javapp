@@ -17,18 +17,18 @@
 namespace java::util {
     shared<Comparator> Map::Entry::comparingByKey() {
         return alloc<Comparator>([](const shared<Object>& o1, const shared<Object>& o2) {
-            const auto obj1 = std::dynamic_pointer_cast<Entry>(o1);
-            const auto obj2 = std::dynamic_pointer_cast<Entry>(o2);
-            const auto obj1k = std::dynamic_pointer_cast<Comparable>(obj1->getKey());
-            const auto obj2k = std::dynamic_pointer_cast<Comparable>(obj2->getKey());
+            const auto obj1 = dynamic_pointer_cast<Entry>(o1);
+            const auto obj2 = dynamic_pointer_cast<Entry>(o2);
+            const auto obj1k = dynamic_pointer_cast<Comparable>(obj1->getKey());
+            const auto obj2k = dynamic_pointer_cast<Comparable>(obj2->getKey());
             return obj1k->compareTo(obj2k);
         });
     }
 
     shared<Comparator> Map::Entry::comparingByKey(const shared<Comparator>& comparator) {
         return alloc<Comparator>([comparator](const shared<Object>& o1, const shared<Object>& o2) {
-            const auto obj1 = std::dynamic_pointer_cast<Entry>(o1);
-            const auto obj2 = std::dynamic_pointer_cast<Entry>(o2);
+            const auto obj1 = dynamic_pointer_cast<Entry>(o1);
+            const auto obj2 = dynamic_pointer_cast<Entry>(o2);
             const auto obj1k = obj1->getKey();
             const auto obj2k = obj2->getKey();
             return comparator->compare(obj1k, obj2k);
@@ -37,18 +37,18 @@ namespace java::util {
 
     shared<Comparator> Map::Entry::comparingByValue() {
         return alloc<Comparator>([](const shared<Object>& o1, const shared<Object>& o2) {
-            const auto obj1 = std::dynamic_pointer_cast<Entry>(o1);
-            const auto obj2 = std::dynamic_pointer_cast<Entry>(o2);
-            const auto obj1k = std::dynamic_pointer_cast<Comparable>(obj1->getValue());
-            const auto obj2k = std::dynamic_pointer_cast<Comparable>(obj2->getValue());
+            const auto obj1 = dynamic_pointer_cast<Entry>(o1);
+            const auto obj2 = dynamic_pointer_cast<Entry>(o2);
+            const auto obj1k = dynamic_pointer_cast<Comparable>(obj1->getValue());
+            const auto obj2k = dynamic_pointer_cast<Comparable>(obj2->getValue());
             return obj1k->compareTo(obj2k);
         });
     }
 
     shared<Comparator> Map::Entry::comparingByValue(shared<Comparator> comparator) {
         return alloc<Comparator>([comparator](const shared<Object>& o1, const shared<Object>& o2) {
-            const auto obj1 = std::dynamic_pointer_cast<Entry>(o1);
-            const auto obj2 = std::dynamic_pointer_cast<Entry>(o2);
+            const auto obj1 = dynamic_pointer_cast<Entry>(o1);
+            const auto obj2 = dynamic_pointer_cast<Entry>(o2);
             const auto obj1k = obj1->getValue();
             const auto obj2k = obj2->getValue();
             return comparator->compare(obj1k, obj2k);

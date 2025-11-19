@@ -18,7 +18,7 @@ public:
     static shared<UnmodifiableMap> copyOf(const shared<Map>& map);
 
 protected:
-    std::shared_ptr<Object> clone() override;
+    shared<Object> clone() override;
 
 public:
     void lateinit() override;

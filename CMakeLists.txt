@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 26)
 option(JAVAPP_ENABLE_LEAK_TRACING "Enable leak tracing for the java++ library, including projects built using it." OFF)
 option(JAVAPP_ENABLE_LEAK_STACKTRACE "Enable leak tracing with stacktraces, this is quite expensive, best not to turn it on when not neccesary" OFF)
 option(JAVAPP_ENABLE_INTERNAL_ASSERTIONS "Enable the assertions of internal structures, may cause some performance issues." OFF)
+option(JAVAPP_ENABLE_GC "Enable the hybrid cons/precise GC for java++ (disables refcounting)" OFF)
 
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
@@ -27,6 +28,12 @@ endif()
 
 if (JAVAPP_ENABLE_INTERNAL_ASSERTIONS)
     add_compile_definitions(JAVAPP_ENABLE_INTERNAL_ASSERTIONS)
+endif()
+
+if(JAVAPP_ENABLE_GC)
+    add_compile_definitions(JAVAPP_ENABLE_GC)
+    message(WARNING "The garbage collector DOES NOT WORK!!!")
+    message(NOTICE "There is absolutely no working memory release mechanism!")
 endif()
 
 add_compile_options(-Wall)
@@ -230,8 +237,11 @@ add_library(libbase STATIC
         src/impl_inner/streams/pipeline/IntPipelineMapToObj.h
         src/impl_inner/streams/pipeline/IntPipelinePeek.cpp
         src/impl_inner/streams/pipeline/IntPipelinePeek.h
+        lib/gc/garbage_collection.cpp
+        lib/gc/garbage_collection.h
         src/impl_inner/AllocTrace.cpp
         src/impl_inner/AllocTrace.h
+        src/impl_inner/Mallocator.h
 )
 target_include_directories(libbase PUBLIC ${CMAKE_SOURCE_DIR}/src)
 target_include_directories(libbase PUBLIC ${CMAKE_SOURCE_DIR}/src/impl_inner)

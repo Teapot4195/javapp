@@ -20,8 +20,8 @@ namespace java::util {
 
             if (!o1->instanceof<Comparable>() || !o2->instanceof<Comparable>())
                 throw std::runtime_error("THROW CLASSCASTEXCEPTION: Comparable");
-            const auto c1 = std::dynamic_pointer_cast<Comparable>(other1);
-            const auto c2 = std::dynamic_pointer_cast<Comparable>(other2);
+            const auto c1 = dynamic_pointer_cast<Comparable>(other1);
+            const auto c2 = dynamic_pointer_cast<Comparable>(other2);
 
             return c1->compareTo(c2);
         });
@@ -80,8 +80,8 @@ namespace java::util {
         return alloc<Comparator>([=](const shared<Object> &o1, const shared<Object> &o2) {
             if (!o1->instanceof<Comparable>() || !o2->instanceof<Comparable>())
                 throw std::runtime_error("THROW CLASSCASTEXCEPTION: Comparable");
-            const auto other1 = std::dynamic_pointer_cast<Comparable>(o1);
-            const auto other2 = std::dynamic_pointer_cast<Comparable>(o2);
+            const auto other1 = dynamic_pointer_cast<Comparable>(o1);
+            const auto other2 = dynamic_pointer_cast<Comparable>(o2);
 
             return other1->compareTo(other2);
         });

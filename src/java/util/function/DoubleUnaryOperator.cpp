@@ -2,7 +2,7 @@
 
 namespace java::util::function {
     shared<DoubleUnaryOperator> DoubleUnaryOperator::andThen(shared<DoubleUnaryOperator> after) {
-        return alloc<DoubleUnaryOperator>([=, self=std::dynamic_pointer_cast<DoubleUnaryOperator>(shared_from_this())](const double value) -> double {
+        return alloc<DoubleUnaryOperator>([=, self=pself](const double value) -> double {
             return after->applyAsDouble(self->applyAsDouble(value));
         });
     }
@@ -12,7 +12,7 @@ namespace java::util::function {
     }
 
     shared<DoubleUnaryOperator> DoubleUnaryOperator::compose(shared<DoubleUnaryOperator> before) {
-        return alloc<DoubleUnaryOperator>([=, self=std::dynamic_pointer_cast<DoubleUnaryOperator>(shared_from_this())](const double value) -> double {
+        return alloc<DoubleUnaryOperator>([=, self=pself](const double value) -> double {
             return self->applyAsDouble(before->applyAsDouble(value));
         });
     }

@@ -12,6 +12,8 @@ class SwissTableHashMap {
 public:
     SwissTableHashMap();
 
+    ~SwissTableHashMap();
+
     explicit SwissTableHashMap(int defaultSize);
 
     explicit SwissTableHashMap(const shared<java::util::Map> &map);

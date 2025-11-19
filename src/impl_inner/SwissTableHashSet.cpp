@@ -13,6 +13,11 @@ SwissTableHashSet::SwissTableHashSet() {
     load_factor_internal = load_factor_limit;
 }
 
+SwissTableHashSet::~SwissTableHashSet() {
+    delete[] table;
+    delete[] metadata;
+}
+
 SwissTableHashSet::SwissTableHashSet(int initialCapacity) {
     table = new swisstable[initialCapacity];
     metadata = new struct metadata[initialCapacity];

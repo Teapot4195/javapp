@@ -44,7 +44,7 @@ std::type_index Enum::get_type_index_checked() {
     return index;
 }
 
-std::shared_ptr<Object> Enum::clone() {
+shared<Object> Enum::clone() {
     throw std::runtime_error("THROW CLONENOTSUPPORTEDEXCPETION!!!!");
 }
 
@@ -87,7 +87,7 @@ void Enum::lateinit() {
         data->ordinal = ++table_entry.allocated;
     }
 
-    table_entry.informations.emplace_back(std::dynamic_pointer_cast<Enum>(shared_from_this()), data->name, data->ordinal);
+    table_entry.informations.emplace_back(pself, data->name, data->ordinal);
 
     this->self_data = &table_entry.informations.back();
 
@@ -95,7 +95,7 @@ void Enum::lateinit() {
 }
 
 int Enum::compareTo(shared<Object> o) {
-    const auto obj = std::dynamic_pointer_cast<Enum>(o);
+    const auto obj = dynamic_pointer_cast<Enum>(o);
     if (this->ordinal() < obj->ordinal())
         return -1;
     if (this->ordinal() > obj->ordinal())
@@ -136,7 +136,7 @@ int Enum::ordinal() {
     return self_data->ordinal;
 }
 
-std::shared_ptr<String> Enum::toString() {
+shared<String> Enum::toString() {
     return self_data->name;
 }
 

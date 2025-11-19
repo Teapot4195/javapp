@@ -65,7 +65,7 @@ namespace java::util {
         };
 
         shared<Iterator> iterator() override {
-            return alloc<Set_Immutable_Specialization_Iterator_Specialization>(std::dynamic_pointer_cast<Set_Immutable_Specialization>(shared_from_this()));
+            return alloc<Set_Immutable_Specialization_Iterator_Specialization>(from_self<Set_Immutable_Specialization>());
         }
 
         bool remove(shared<Object> o) override {
@@ -162,6 +162,6 @@ namespace java::util {
     };
 
     shared<Spliterator> Set::spliterator() {
-        return alloc<Spliterator_Set_Specialization>(std::dynamic_pointer_cast<Set>(shared_from_this()));
+        return alloc<Spliterator_Set_Specialization>(from_self<Set>());
     }
 }

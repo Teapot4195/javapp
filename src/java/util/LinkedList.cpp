@@ -6,6 +6,7 @@
 #include "ListIterator.h"
 #include "Spliterator.h"
 #include "function/Consumer.h"
+#include "function/IntFunction.h"
 
 namespace java::util {
     constexpr void LinkedList::checkBounds(const int index) const {
@@ -196,7 +197,7 @@ namespace java::util {
         }
     }
 
-    std::shared_ptr<Object> LinkedList::clone() {
+    shared<Object> LinkedList::clone() {
         auto copy = shared<LinkedList>();
 
         const auto* current = _head;
@@ -277,7 +278,7 @@ namespace java::util {
     };
 
     shared<Iterator> LinkedList::descendingIterator() {
-        return std::dynamic_pointer_cast<Iterator>(alloc<LinkedList_ListIteratorDescending>(std::dynamic_pointer_cast<LinkedList>(shared_from_this()), _size));
+        return dynamic_pointer_cast<Iterator>(alloc<LinkedList_ListIteratorDescending>(from_self<LinkedList>(), _size));
     }
 
     shared<Object> LinkedList::element() {
@@ -405,11 +406,11 @@ namespace java::util {
     shared<ListIterator> LinkedList::listIterator(int index) {
         if (index < 0 || index > _size)
             throw std::runtime_error("THROW INDEXOUTOFBOUNDSEXCEPTION");
-        return alloc<LinkedList_ListIterator>(std::dynamic_pointer_cast<LinkedList>(shared_from_this()), index);
+        return alloc<LinkedList_ListIterator>(from_self<LinkedList>(), index);
     }
 
     shared<ListIterator> LinkedList::listIterator() {
-        return alloc<LinkedList_ListIterator>(std::dynamic_pointer_cast<LinkedList>(shared_from_this()), 0);
+        return alloc<LinkedList_ListIterator>(from_self<LinkedList>(), 0);
     }
 
     bool LinkedList::offer(const shared<Object> e) {
@@ -758,7 +759,7 @@ namespace java::util {
     };
 
     shared<Spliterator> LinkedList::spliterator() {
-        return alloc<LinkedList_Spliterator_Specialization>(std::dynamic_pointer_cast<LinkedList>(shared_from_this()), 0, _size);
+        return alloc<LinkedList_Spliterator_Specialization>(from_self<LinkedList>(), 0, _size);
     }
 
     shared<Array<>> LinkedList::toArray() {
@@ -766,7 +767,7 @@ namespace java::util {
 
         const auto* current = _head;
         for (int i = 0; i < _size; i++) {
-            array->data[i] = current->data;
+            array->get_data()[i] = current->data;
             current = current->next;
         }
 
@@ -784,7 +785,7 @@ namespace java::util {
 
         const auto* current = _head;
         for (int i = 0; i < _size; i++) {
-            array->data[i] = current->data;
+            array->get_data()[i] = current->data;
             current = current->next;
         }
 

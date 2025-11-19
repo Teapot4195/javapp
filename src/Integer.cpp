@@ -25,7 +25,7 @@ int Integer::compare(int x, int y) {
 }
 
 int Integer::compareTo(shared<Object> o) {
-    return compare(boxed_value, std::dynamic_pointer_cast<Integer>(o)->boxed_value);
+    return compare(boxed_value, dynamic_pointer_cast<Integer>(o)->boxed_value);
 }
 
 int Integer::compareUnsigned(int x, int y) {

@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <iostream>
 #include <stacktrace>
+#include <String.h>
 
 namespace infra {
     // from dawn-winery/dwhbll exceptions/rt_exception_base
@@ -65,7 +66,7 @@ namespace infra {
         if (x == null ? y == null : x->equals(y))
             pass();
         else {
-            std::cout << x->toString() << " not equal to " << y->toString() << std::endl;
+            std::cout << x->toString()->get_backing() << " not equal to " << y->toString()->get_backing() << std::endl;
             fail();
         }
     }

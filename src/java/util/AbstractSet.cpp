@@ -1,6 +1,7 @@
 #include "AbstractSet.h"
 
 #include "Iterator.h"
+#include "function/IntFunction.h"
 
 namespace java::util {
     bool AbstractSet::equals(Object *obj) {
@@ -11,7 +12,7 @@ namespace java::util {
         auto* set = dynamic_cast<Set*>(obj);
         if (set->size() != size())
             return false;
-        return this->containsAll(std::dynamic_pointer_cast<Collection>(set->shared_from_this()));
+        return this->containsAll(set->from_self<Collection>());
     }
 
     int AbstractSet::hashCode() {

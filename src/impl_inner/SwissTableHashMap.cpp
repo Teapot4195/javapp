@@ -11,6 +11,11 @@ SwissTableHashMap::SwissTableHashMap() {
     load_factor_internal = load_factor_limit;
 }
 
+SwissTableHashMap::~SwissTableHashMap() {
+    delete[] table;
+    delete[] metadata;
+}
+
 SwissTableHashMap::SwissTableHashMap(int defaultSize) {
     table = new swisstable[defaultSize];
     metadata = new struct metadata[defaultSize];

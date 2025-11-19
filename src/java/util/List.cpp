@@ -113,17 +113,17 @@ namespace java::util {
         bool isEmpty() override;
 
         shared<Iterator> iterator() override {
-            return alloc<List_CopyOf_Immutable_Iterator>(std::dynamic_pointer_cast<List>(shared_from_this()));
+            return alloc<List_CopyOf_Immutable_Iterator>(from_self<List>());
         }
 
         int lastIndexOf(shared<Object> o) override;
 
         shared<ListIterator> listIterator() override {
-            return alloc<List_CopyOf_Immutable_ListIterator>(std::dynamic_pointer_cast<List>(shared_from_this()));
+            return alloc<List_CopyOf_Immutable_ListIterator>(from_self<List>());
         }
 
         shared<ListIterator> listIterator(int index) override {
-            return alloc<List_CopyOf_Immutable_ListIterator>(std::dynamic_pointer_cast<List>(shared_from_this()), index);
+            return alloc<List_CopyOf_Immutable_ListIterator>(from_self<List>(), index);
         }
 
         shared<Object> remove(int index) override {
@@ -186,8 +186,8 @@ namespace java::util {
         }
 
         bool contains(const shared<Object> o) override {
-            const auto& d = parent->data;
-            for (int i = 0; i < parent->length; i++) {
+            const auto& d = parent->get_data();
+            for (int i = 0; i < parent->get_length(); i++) {
                 if (d[i] != nullptr && d[i]->equals(o))
                     return true;
                 if (d[i] == nullptr && o == nullptr)
@@ -206,12 +206,12 @@ namespace java::util {
         }
 
         shared<Object> get(const int index) override {
-            return parent->data[index];
+            return parent->get_data()[index];
         }
 
         int indexOf(const shared<Object> o) override {
-            const auto& d = parent->data;
-            for (int i = 0; i < parent->length; i++) {
+            const auto& d = parent->get_data();
+            for (int i = 0; i < parent->get_length(); i++) {
                 if (d[i] != nullptr && d[i]->equals(o))
                     return i;
                 if (d[i] == nullptr && o == nullptr)
@@ -221,16 +221,16 @@ namespace java::util {
         }
 
         bool isEmpty() override {
-            return parent->length == 0;
+            return parent->get_length() == 0;
         }
 
         shared<Iterator> iterator() override {
-            return alloc<List_CopyOf_Immutable_Iterator>(std::dynamic_pointer_cast<List>(shared_from_this()));
+            return alloc<List_CopyOf_Immutable_Iterator>(from_self<List>());
         }
 
         int lastIndexOf(const shared<Object> o) override {
-            const auto& d = parent->data;
-            for (int i = parent->length - 1; i >= 0; i--) {
+            const auto& d = parent->get_data();
+            for (int i = parent->get_length() - 1; i >= 0; i--) {
                 if (d[i] != nullptr && d[i]->equals(o))
                     return i;
                 if (d[i] == nullptr && o == nullptr)
@@ -240,11 +240,11 @@ namespace java::util {
         }
 
         shared<ListIterator> listIterator() override {
-            return alloc<List_CopyOf_Immutable_ListIterator>(std::dynamic_pointer_cast<List>(shared_from_this()));
+            return alloc<List_CopyOf_Immutable_ListIterator>(from_self<List>());
         }
 
         shared<ListIterator> listIterator(int index) override {
-            return alloc<List_CopyOf_Immutable_ListIterator>(std::dynamic_pointer_cast<List>(shared_from_this()), index);
+            return alloc<List_CopyOf_Immutable_ListIterator>(from_self<List>(), index);
         }
 
         shared<Object> remove(int index) override {
@@ -268,11 +268,11 @@ namespace java::util {
         }
 
         int size() override {
-            return parent->length;
+            return parent->get_length();
         }
 
         shared<List> subList(int fromIndex, int toIndex) override {
-            return alloc<List_CopyOf_Immutable_SubList>(std::dynamic_pointer_cast<List_CopyOf_Immutable>(shared_from_this()), fromIndex, toIndex);
+            return alloc<List_CopyOf_Immutable_SubList>(from_self<List_CopyOf_Immutable>(), fromIndex, toIndex);
         }
 
         shared<Array<>> toArray() override {
@@ -280,22 +280,22 @@ namespace java::util {
         }
 
         shared<Array<>> toArray(shared<Array<>> a) override {
-            if (parent->length < a->length) {
-                for (int i = 0; i < parent->length; i++) {
-                    a->data[i] = parent->data[i];
+            if (parent->get_length() < a->get_length()) {
+                for (int i = 0; i < parent->get_length(); i++) {
+                    a->get_data()[i] = parent->get_data()[i];
                 }
                 return a;
             }
-            a->resize(parent->length);
-            for (int i = 0; i < parent->length; i++) {
-                a->data[i] = parent->data[i];
+            a->resize(parent->get_length());
+            for (int i = 0; i < parent->get_length(); i++) {
+                a->get_data()[i] = parent->get_data()[i];
             }
             return a;
         }
     };
 
     bool List_CopyOf_Immutable_SubList::contains(const shared<Object> o) {
-        const auto& d = parent->parent->data;
+        const auto& d = parent->parent->get_data();
         for (int i = begin; i < end; i++) {
             if (d[i] != nullptr && d[i]->equals(o))
                 return true;
@@ -315,11 +315,11 @@ namespace java::util {
     }
 
     shared<Object> List_CopyOf_Immutable_SubList::get(const int index) {
-        return parent->parent->data[begin + index];
+        return parent->parent->get_data()[begin + index];
     }
 
     int List_CopyOf_Immutable_SubList::indexOf(const shared<Object> o) {
-        const auto& d = parent->parent->data;
+        const auto& d = parent->parent->get_data();
         for (int i = begin; i < end; i++) {
             if (d[i] != nullptr && d[i]->equals(o))
                 return i;
@@ -334,7 +334,7 @@ namespace java::util {
     }
 
     int List_CopyOf_Immutable_SubList::lastIndexOf(const shared<Object> o) {
-        const auto& d = parent->parent->data;
+        const auto& d = parent->parent->get_data();
         for (int i = end - 1; i >= begin; i--) {
             if (d[i] != nullptr && d[i]->equals(o))
                 return i;
@@ -358,15 +358,15 @@ namespace java::util {
     }
 
     shared<Array<>> List_CopyOf_Immutable_SubList::toArray(shared<Array<>> a) {
-        if (size() < a->length) {
+        if (size() < a->get_length()) {
             for (int i = begin; i < end; i++) {
-                a->data[i] = parent->parent->data[i];
+                a->get_data()[i] = parent->parent->get_data()[i];
             }
             return a;
         }
         a->resize(size());
         for (int i = begin; i < end; i++) {
-            a->data[i] = parent->parent->data[i];
+            a->get_data()[i] = parent->parent->get_data()[i];
         }
         return a;
     }
@@ -452,8 +452,8 @@ namespace java::util {
     };
 
     shared<Spliterator> List::spliterator() {
-        if (shared_from_this()->instanceof<RandomAccess>())
-            return alloc<List_Spliterator_Random>(std::dynamic_pointer_cast<List>(shared_from_this()));
-        return alloc<List_Spliterator_NonRandom>(std::dynamic_pointer_cast<List>(shared_from_this()));
+        if (from_self<>()->instanceof<RandomAccess>())
+            return alloc<List_Spliterator_Random>(pself);
+        return alloc<List_Spliterator_NonRandom>(pself);
     }
 }

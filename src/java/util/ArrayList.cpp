@@ -7,6 +7,7 @@
 #include "Spliterator.h"
 #include "function/Consumer.h"
 #include "function/Predicate.h"
+#include "function/IntFunction.h"
 
 #include <cstring>
 #include <java/util/Comparator.h>
@@ -132,7 +133,7 @@ namespace java::util {
         _capacity = 0;
     }
 
-    std::shared_ptr<Object> ArrayList::clone() {
+    shared<Object> ArrayList::clone() {
         auto obj = alloc<ArrayList>(_capacity);
         obj->copyFrom(this);
         return obj;
@@ -388,7 +389,7 @@ namespace java::util {
     }
 
     shared<Spliterator> ArrayList::spliterator() {
-        return alloc<ArrayList_Spliterator_Specialization>(std::dynamic_pointer_cast<ArrayList>(shared_from_this()));
+        return alloc<ArrayList_Spliterator_Specialization>(from_self<ArrayList>());
     }
 
     shared<List> ArrayList::subList(const int fromIndex, const int toIndex) {
@@ -398,8 +399,8 @@ namespace java::util {
     shared<Array<>> ArrayList::toArray() {
         auto arr = alloc<Array<>>(_size);
 
-        std::copy_n(_array, _size, arr->data);
-        arr->length = _size;
+        std::copy_n(_array, _size, arr->get_data());
+        arr->set_length(_size);
 
         return arr;
     }
@@ -411,15 +412,15 @@ namespace java::util {
     shared<Array<>> ArrayList::toArray(const shared<Array<>> a) {
         auto arr = a;
 
-        if (arr->length < _size) {
+        if (arr->get_length() < _size) {
             arr->resize(_size);
         }
 
-        std::copy_n(_array, _size, arr->data);
+        std::copy_n(_array, _size, arr->get_data());
 
-        if (arr->length > _size) {
-            for (int i = _size; i < arr->length; i++)
-                arr->data[i] = nullptr;
+        if (arr->get_length() > _size) {
+            for (int i = _size; i < arr->get_length(); i++)
+                arr->get_data()[i] = nullptr;
         }
 
         return arr;
@@ -439,7 +440,7 @@ namespace java::util {
         shared<Comparable> *a = new shared<Comparable>[_size], *work = new shared<Comparable>[_size];
 
         for (int i = 0; i < _size; i++)
-            work[i] = a[i] = std::dynamic_pointer_cast<Comparable>(_array[i]);
+            work[i] = a[i] = dynamic_pointer_cast<Comparable>(_array[i]);
 
         MergeSort(a, work, _size);
 

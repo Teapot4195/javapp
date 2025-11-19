@@ -11,6 +11,8 @@ class SwissTableHashSet {
 public:
     SwissTableHashSet();
 
+    ~SwissTableHashSet();
+
     explicit SwissTableHashSet(int initialCapacity);
 
     SwissTableHashSet(int initialCapacity, float loadFactor);

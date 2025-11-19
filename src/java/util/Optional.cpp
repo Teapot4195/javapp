@@ -38,7 +38,7 @@ namespace java::util {
             return empty();
         if (mapper == nullptr)
             throw std::runtime_error("THROW NULLPOINTEREXCEPTION");
-        return std::dynamic_pointer_cast<Optional>(mapper->apply(value));
+        return dynamic_pointer_cast<Optional>(mapper->apply(value));
     }
 
     shared<Object> Optional::get() {
@@ -106,7 +106,7 @@ namespace java::util {
             return alloc<Optional>(value);
         if (supplier == nullptr)
             throw std::runtime_error("THROW NULLPOINTEREXCEPTION");
-        return std::dynamic_pointer_cast<Optional>(supplier->get());
+        return dynamic_pointer_cast<Optional>(supplier->get());
     }
 
     shared<Object> Optional::orElse(shared<Object> other) {
@@ -134,7 +134,7 @@ namespace java::util {
             return value;
         if (exceptionSupplier == nullptr)
             throw std::runtime_error("THROW NULLPOINTEREXCEPTION");
-        throw std::dynamic_pointer_cast<Throwable>(exceptionSupplier->get());
+        throw dynamic_pointer_cast<Throwable>(exceptionSupplier->get());
     }
 
     shared<stream::Stream> Optional::stream() {

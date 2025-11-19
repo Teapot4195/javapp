@@ -4,6 +4,7 @@
 #include <java/util/Iterator.h>
 #include <java/util/Spliterator.h>
 #include <java/util/function/Consumer.h>
+#include "function/IntFunction.h"
 
 namespace java::util {
     class HashSet_Iterator_Specialization final : public virtual Object, public virtual java::util::Iterator {
@@ -106,7 +107,7 @@ namespace java::util {
         table->table_clear();
     }
 
-    std::shared_ptr<Object> HashSet::clone() {
+    shared<Object> HashSet::clone() {
         shared<HashSet> set = alloc<HashSet>();
 
         set->table = table->clone();
@@ -152,7 +153,7 @@ namespace java::util {
         int aindex = 0;
         for (size_t i = 0; i < table->table_size; i++) {
             if (table->metadata[i].usage && !table->metadata[i].tombstone)
-                a->data[aindex++] = table->table[i].key;
+                a->get_data()[aindex++] = table->table[i].key;
         }
 
         return a;
