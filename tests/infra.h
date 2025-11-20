@@ -25,5 +25,12 @@ namespace infra {
             fail();
     }
 
+    inline void check(bool cond, const std::string &msg) {
+        if (cond)
+            pass();
+        else
+            fail(msg);
+    }
+
     void equal(shared<Object> x, shared<Object> y);
 }
