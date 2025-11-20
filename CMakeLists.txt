@@ -242,6 +242,8 @@ add_library(libbase STATIC
         src/impl_inner/AllocTrace.cpp
         src/impl_inner/AllocTrace.h
         src/impl_inner/Mallocator.h
+        src/Boolean.cpp
+        src/Boolean.h
 )
 target_include_directories(libbase PUBLIC ${CMAKE_SOURCE_DIR}/src)
 target_include_directories(libbase PUBLIC ${CMAKE_SOURCE_DIR}/src/impl_inner)
