@@ -9,12 +9,20 @@
 
 #include <rttr/registration>
 
+#include "infra.h"
+
+using testfunc = std::function<void()>;
+
+#include "java/lang/Boolean/test.h"
+
+std::unordered_map<std::string, testfunc> test_names {
+    {"java.lang.Boolean", tests::java::lang::Boolean::test},
+};
+
 struct test : Object {
 };
 
 int jmain(int argc, char** argv) {
-    Object::registerType<test>();
-
     std::vector<shared<Object>> t;
 
     shared<test> m;
@@ -29,6 +37,21 @@ int jmain(int argc, char** argv) {
         std::this_thread::sleep_for(std::chrono::nanoseconds(100));
         break;
     }
+
+    if (argc == 1) {
+        for (const auto& [name, func] : test_names) {
+            std::cerr << "Testing: " << name << std::endl;
+            func();
+        }
+    } else {
+        if (test_names.contains(argv[1])) {
+            auto& func = test_names[argv[1]];
+            std::cerr << "Testing: " << argv[1] << std::endl;
+            func();
+        }
+    }
+
+    std::cerr << "Testing results: Passed: " << infra::passed.load() << ", Failed: " << infra::failed.load() << std::endl;
 
     return 0;
 }

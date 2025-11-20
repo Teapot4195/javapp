@@ -523,6 +523,8 @@ template<typename _Rep, typename _Period> void  sleep_for(const std::chrono::dur
 }
 #endif
 
+shared<String> operator ""_s(const char* str, std::size_t len);
+
 int main(int argc, char** argv);
 
 int jmain(int argc, char** argv);

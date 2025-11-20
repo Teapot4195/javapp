@@ -255,5 +255,8 @@ add_executable(test
         tests/test.cpp
         tests/infra.h
         tests/infra.cpp
+        tests/java/lang/Boolean/test.cpp
+        tests/java/lang/Boolean/test.h
 )
 target_link_libraries(test PUBLIC libbase)
+target_include_directories(test PRIVATE tests)

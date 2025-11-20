@@ -1,8 +1,9 @@
 #pragma once
 
+#include <Comparable.h>
 #include <Object.h>
 
-class Boolean final : public virtual Object {
+class Boolean final : public virtual Object, public virtual Comparable {
     const bool value;
 
     static const shared<String> STR_TRUE, STR_FALSE;
@@ -20,7 +21,7 @@ public:
 
     static int compare(bool x, bool y);
 
-    int compareTo(const shared<Boolean>& b);
+    int compareTo(shared<Object> b) override;
 
     bool equals(Object *obj) override;
 

@@ -28,8 +28,9 @@ int Boolean::compare(bool x, bool y) {
     std::unreachable();
 }
 
-int Boolean::compareTo(const shared<Boolean> &b) {
-    return compare(value, b->value);
+int Boolean::compareTo(shared<Object> b) {
+    auto cast = dynamic_pointer_cast<Boolean>(b);
+    return compare(value, cast->value);
 }
 
 bool Boolean::equals(Object *obj) {
@@ -66,7 +67,7 @@ bool Boolean::logicalXor(bool a, bool b) {
 }
 
 bool Boolean::parseBoolean(const shared<String> &name) {
-    if (!name) {
+    if (name != nullptr) {
         std::string v = name->get_backing();
         std::ranges::transform(v, v.begin(), ::tolower);
         if (v == "true")

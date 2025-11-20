@@ -5,7 +5,7 @@
 #include <string>
 
 namespace infra {
-    std::atomic_size_t passed = 0, failed = 0;
+    extern std::atomic_size_t passed, failed;
 
     inline void pass() {
         ++passed;
@@ -27,6 +27,20 @@ namespace infra {
 
     inline void check(bool cond, const std::string &msg) {
         if (cond)
+            pass();
+        else
+            fail(msg);
+    }
+
+    inline void icheck(bool cond) {
+        if (!cond)
+            pass();
+        else
+            fail();
+    }
+
+    inline void icheck(bool cond, const std::string &msg) {
+        if (!cond)
             pass();
         else
             fail(msg);

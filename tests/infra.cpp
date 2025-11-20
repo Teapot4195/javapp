@@ -6,6 +6,9 @@
 #include <String.h>
 
 namespace infra {
+    std::atomic_size_t passed = 0;
+    std::atomic_size_t failed = 0;
+
     // from dawn-winery/dwhbll exceptions/rt_exception_base
     std::string get_prettyprint_trace(const std::stacktrace &trace) {
         std::stringstream stream;

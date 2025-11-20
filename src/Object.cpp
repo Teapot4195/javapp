@@ -227,6 +227,10 @@ void panic(const std::string &msg) {
     panic(msg.data());
 }
 
+shared<String> operator ""_s(const char *str, std::size_t len) {
+    return alloc<String>(str);
+}
+
 void get_stack_bounds(void **stack_base, size_t *stack_size) {
     pthread_attr_t attr;
     pthread_getattr_np(pthread_self(), &attr);  // non-portable GNU extension
